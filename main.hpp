@@ -9,6 +9,10 @@
 
 static pxWindow px;
 
+static pxSStream ss;
+
 static int gNumOfMonsters = 0;
+
+void Bones(); // Game one, see readme.txt
 
 #endif // MAIN_H
