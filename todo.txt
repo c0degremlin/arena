@@ -1,0 +1,8 @@
+Set the right variables to see if player is made or not in create characther switches
+add inventory
+
+finsih cWeapon and cArmor
+
+
+
+add potions
