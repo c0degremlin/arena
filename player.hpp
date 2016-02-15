@@ -25,8 +25,10 @@ extern pxWindow px;
 extern pxSStream ss;
 
 extern int gNumOfMonsters;
-extern const sint const_baseAC;
-extern const sint const_unarmed;
+
+const float const_hpScaling = 1.2f;	// Constitution bonus
+const float const_manaScaling = 1.5;	// Intelligence bonus
+const sint const_baseAC = 10;		// Without armor
 
 // Combat is to be based of an Action point system, for which this formula is still to
 // be determined
@@ -66,15 +68,15 @@ public:
 	const sint getAP() { return mAP; }
 
 	// zeros are for debugging purposes
-	void setRun( bool tmp ) { monsterCanRun = tmp; }
-	void setDead( bool tmp ) { mIsDead = tmp; }
-	void setName( string tmp ) { mName = tmp; }
-	void setWeaponName( string tmp ) { mEquippedWeaponName = tmp; }
-	void setHealth(sint iNum=0) { if(iNum >= 0 ) mHealth = iNum; }
-	void setArmor(sint iNum=0) { if(iNum >= 0 ) mArmor = iNum; }
-	void setGold(sint iNum=0) { if(iNum >= 0 ) mGold = iNum; }
-	void setAttack(sint iNum=0) { if( iNum >= 0 ) mAttack = iNum; }
-	void setAP(sint iNum=0) { if( iNum >= 0 ) mAP = iNum; }
+	void setRun(bool tmp) { monsterCanRun = tmp; }
+	void setDead(bool tmp) { mIsDead = tmp; }
+	void setName(string tmp) { mName = tmp; }
+	void setWeaponName(string tmp) { mEquippedWeaponName = tmp; }
+	void setHealth(sint iNum = 0) { if (iNum >= 0) mHealth = iNum; }
+	void setArmor(sint iNum = 0) { if (iNum >= 0) mArmor = iNum; }
+	void setGold(sint iNum = 0) { if (iNum >= 0) mGold = iNum; }
+	void setAttack(sint iNum = 0) { if (iNum >= 0) mAttack = iNum; }
+	void setAP(sint iNum = 0) { if (iNum >= 0) mAP = iNum; }
 	// add and delete action points
 	void addAP(sint num = 1) { mAP += num; }
 	bool delAP(sint num = 1); // true if you have enough AP.
@@ -84,10 +86,10 @@ class cPlayer : public cMonster
 {
 private:
 	// Add inventory capabilities.. prob cItem vectors
-	
+
 	vector<cWeapon> mWeaponInventory;
 	vector<cArmor> mArmorInventory;
-	
+
 	string mEquippedWeaponDesc;
 	string mEquippedArmorName;
 	string mEquipedArmorDesc;
@@ -109,7 +111,7 @@ private:
 	int mPotions; // can only have as many potions as level
 	int mExperience;
 	int mLevel;
-	
+
 public:
 	bool mCreated;
 	cPlayer();
@@ -121,12 +123,13 @@ public:
 	// heal()
 	// levelUp()
 
-	void addWeapon( cWeapon item, int number = 0 );
-	void delWeapon( cWeapon item, int number = 0 );
+	void addWeapon(cWeapon item, int number = 0);
+	void delWeapon(cWeapon item, int number = 0);
 	void showInventory();
+	void calcHPandMP(cPlayer &player);
 
 	// Accessors
-	const string getWeaponDesc() { return mEquippedWeaponDesc; } const string getArmorName() { return mEquippedArmorName;}
+	const string getWeaponDesc() { return mEquippedWeaponDesc; } const string getArmorName() { return mEquippedArmorName; }
 	const string getArmorDesc() { return mEquipedArmorDesc; } const string getClass() { return mClassName; }
 	const int getMaxHealth() { return mMaxHealth; } const int getMana() { return mMana; } const int getMaxMana() { return mMaxMana; }
 	const int getMaxAP() { return mMaxAP; }	 const int getStrength() { return mStrength; } const int getDexterity() { return mDexterity; }
@@ -134,20 +137,20 @@ public:
 	const int getCharisma() { return mCharisma; } const int getPotions() { return mPotions; }
 	const int getLevel() { return mLevel; } const int getExperience() { return mExperience; }
 
-	void setWeaponDesc( string tmp ) { mEquippedWeaponDesc = tmp; }
-	void setArmorName( string tmp ) { mEquippedArmorName = tmp; } void setArmorDesc( string tmp ) { mEquipedArmorDesc = tmp; }
-	void setClass( string tmp ) { mClassName = tmp; } void setMaxHealth( int tmp ) { if( tmp > 0 && tmp >= mHealth) mMaxHealth = tmp; }
-	void setMana( int tmp ) { if( tmp > 0 ) mMana = tmp; } void setMaxMana( int tmp ) { if( tmp > 0 && tmp >= mMana) mMaxMana = tmp; }
-	void setMaxAP( int tmp ) { if( tmp > 0 && tmp >= mAP) mMaxAP = tmp; } void setStrength( int tmp ) { if( tmp > 7 ) mStrength = tmp; }
-	void setDexterity( int tmp ) { if( tmp > 7 ) mDexterity = tmp; } void setConstitution( int tmp) { if(tmp > 7 ) mConstituion = tmp; }
-	void setIntelligence( int tmp) { if(tmp > 7 ) mIntelligence = tmp; }
-	void setWisdom( int tmp ) { if( tmp > 7 ) mWisdom = tmp; } void setCharisma( int tmp ) { if( tmp > 7 ) mCharisma = tmp; }
-	void setPotions( int tmp ) { if( tmp > 0 ) mPotions = tmp; }
-	void setLevel( int tmp ) { if( tmp > 1 ) mLevel = tmp; } void setExperience( int tmp ) { if( tmp > 0 ) mExperience = tmp; }
+	void setWeaponDesc(string tmp) { mEquippedWeaponDesc = tmp; }
+	void setArmorName(string tmp) { mEquippedArmorName = tmp; } void setArmorDesc(string tmp) { mEquipedArmorDesc = tmp; }
+	void setClass(string tmp) { mClassName = tmp; } void setMaxHealth(int tmp) { if (tmp > 0 && tmp >= mHealth) mMaxHealth = tmp; }
+	void setMana(int tmp) { if (tmp > 0) mMana = tmp; } void setMaxMana(int tmp) { if (tmp > 0 && tmp >= mMana) mMaxMana = tmp; }
+	void setMaxAP(int tmp) { if (tmp > 0 && tmp >= mAP) mMaxAP = tmp; } void setStrength(int tmp) { if (tmp > 7) mStrength = tmp; }
+	void setDexterity(int tmp) { if (tmp > 7) mDexterity = tmp; } void setConstitution(int tmp) { if (tmp > 7) mConstituion = tmp; }
+	void setIntelligence(int tmp) { if (tmp > 7) mIntelligence = tmp; }
+	void setWisdom(int tmp) { if (tmp > 7) mWisdom = tmp; } void setCharisma(int tmp) { if (tmp > 7) mCharisma = tmp; }
+	void setPotions(int tmp) { if (tmp > 0) mPotions = tmp; }
+	void setLevel(int tmp) { if (tmp > 1) mLevel = tmp; } void setExperience(int tmp) { if (tmp > 0) mExperience = tmp; }
 
 	void fullAP() { mAP = mMaxAP; }
-	void addAP( sint tmp = 1 ); // do check with maxAP
-	void delAP( sint tmp = 1 );
+	void addAP(sint tmp = 1); // do check with maxAP
+	void delAP(sint tmp = 1);
 };
 
 #endif

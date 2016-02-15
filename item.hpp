@@ -192,20 +192,20 @@ protected:
 	sint mDice;
 	sint mCritical;
 	sint mCritMod;
-	
+
 	bool isEquipped; // Do i have this readied	
 
 	string mTypeDetail; // sword, axe, bow, dagger, polearm
 public:
-	cWeapon( sint dmg = 0, sint dice = 0, sint crit = 0, sint critmod = 0, sint value = 0, string name = "", string desc = "", string type = "");
+	cWeapon(sint dmg = 0, sint dice = 0, sint crit = 0, sint critmod = 0, sint value = 0, string name = "", string desc = "", string type = "");
 
 	// Accesors
 	sint getDamage() { return mDamage; }
-	sint getDice() { return mDice; } 
-	sint getCritical() { return mCritical; } 
+	sint getDice() { return mDice; }
+	sint getCritical() { return mCritical; }
 	sint getCritMod() { return mCritMod; }
-	sint getIsEquipped() { return isEquipped; } 
-	sint getValue() { return mValue; }	
+	sint getIsEquipped() { return isEquipped; }
+	sint getValue() { return mValue; }
 
 	string getName() { return mItemName; }
 	string getDesc() { return mItemDesc; }
@@ -222,7 +222,7 @@ private:
 
 	string mTypeDetail; // leather, hide, place, scale, chain, amethst, mithril
 public:
-	cArmor( sint dex = 0, sint ac = 0, sint value = 0, string name = "", string desc = "", string type = "" );
+	cArmor(sint dex = 0, sint ac = 0, sint value = 0, string name = "", string desc = "", string type = "");
 
 	// Accesors
 	sint getMaxDex() { return mDexMod; } sint getAC() { return mArmorClass; } sint getValue() { return mValue; } bool getEquipped() { return isEquipped; }

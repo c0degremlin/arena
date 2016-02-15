@@ -111,5 +111,5 @@ void pxWindow::pause(string sMsg, string sText)
 
 void pxWindow::clrscr()
 {
-		system("clear");
+	nl(30);
 }
