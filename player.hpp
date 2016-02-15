@@ -14,8 +14,19 @@
 #ifndef PLAYER
 #define PLAYER
 
-#include "main.hpp"
+#include "phatx.hpp"
+#include "phatSS.hpp"
+#include "item.hpp"
 
+#include <vector>
+using std::vector;
+
+extern pxWindow px;
+extern pxSStream ss;
+
+extern int gNumOfMonsters;
+extern const sint const_baseAC;
+extern const sint const_unarmed;
 
 // Combat is to be based of an Action point system, for which this formula is still to
 // be determined
@@ -73,6 +84,10 @@ class cPlayer : public cMonster
 {
 private:
 	// Add inventory capabilities.. prob cItem vectors
+	
+	vector<cWeapon> mWeaponInventory;
+	vector<cArmor> mArmorInventory;
+	
 	string mEquippedWeaponDesc;
 	string mEquippedArmorName;
 	string mEquipedArmorDesc;
@@ -94,8 +109,9 @@ private:
 	int mPotions; // can only have as many potions as level
 	int mExperience;
 	int mLevel;
-
+	
 public:
+	bool mCreated;
 	cPlayer();
 	~cPlayer();
 
@@ -105,6 +121,9 @@ public:
 	// heal()
 	// levelUp()
 
+	void addWeapon( cWeapon item, int number = 0 );
+	void delWeapon( cWeapon item, int number = 0 );
+	void showInventory();
 
 	// Accessors
 	const string getWeaponDesc() { return mEquippedWeaponDesc; } const string getArmorName() { return mEquippedArmorName;}
@@ -126,6 +145,9 @@ public:
 	void setPotions( int tmp ) { if( tmp > 0 ) mPotions = tmp; }
 	void setLevel( int tmp ) { if( tmp > 1 ) mLevel = tmp; } void setExperience( int tmp ) { if( tmp > 0 ) mExperience = tmp; }
 
+	void fullAP() { mAP = mMaxAP; }
+	void addAP( sint tmp = 1 ); // do check with maxAP
+	void delAP( sint tmp = 1 );
 };
 
 #endif

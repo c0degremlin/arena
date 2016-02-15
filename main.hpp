@@ -6,13 +6,19 @@
 
 #include "phatSS.hpp"
 #include "phatx.hpp"
+#include "player.hpp"
 
-static pxWindow px;
+cPlayer player;
 
-static pxSStream ss;
+void createCharacter(); // rolls for stats and assign name 
+void nameCharacter(); 	// name player object
+void rollStats(); 	// fills the variables for players
+void showStats( bool clrscr = true );
+void purchase();	// purchase armor and weapons
+const float const_hpScaling = 1.2f;	// Constitution bonus
+const float const_manaScaling = 1.5;	// Intelligence bonus
+const sint const_baseAC = 10;		// Without armor
 
-static int gNumOfMonsters = 0;
-
-void Bones(); // Game one, see readme.txt
+void testing(); //	for new features
 
 #endif // MAIN_H
