@@ -106,18 +106,53 @@ void cPlayer::delWeapon(cWeapon item, int number)
 		mWeaponInventory.erase(mWeaponInventory.begin(), mWeaponInventory.begin() + number);
 }
 
-void cPlayer::equipWeapon(int number)
+void cPlayer::equipWeapon(cWeapon weapon, int number)
 {
-	cWeapon tmp;
-	tmp = mWeaponInventory.at(number);
-	mEquippedWeaponName = tmp.getName();
-	mEquippedWeaponDesc = tmp.getDesc();
-	mAttack = tmp.getDamage();
+	weapon = mWeaponInventory.at(number);
+	mEquippedWeaponName = weapon.getName();
+	mEquippedWeaponDesc = weapon.getDesc();
+	mAttack = weapon.getDamage();
 }
 
 void cPlayer::getWeapon(cWeapon &item, int number)
 {
 	item = mWeaponInventory.at(number);
+}
+
+void cPlayer::level()
+{
+	sint prevXP, prevLevel, nextXP, nextLevel;
+	vector<sint> xpChart;
+	vector<sint> levelChart;
+
+	prevXP = 0;
+	prevLevel = 1;
+
+	nextXP = 1000;
+	nextLevel = 1;
+	
+	xpChart.push_back(prevXP);
+	levelChart.push_back(prevLevel);
+
+	// calculate 30 levels
+	for( int i = 1; i < 30; i++ )
+	{
+		nextXP = ( i * 1000) + prevXP;
+		nextLevel++;
+		prevXP = nextXP;
+
+		xpChart.push_back(nextXP);
+		levelChart.push_back(nextLevel);
+	}
+
+		if( mExperience >= xpChart.at(mLevel))
+		{
+			mLevel = levelChart.at(mLevel);
+			px.text("You leveled up! You are now level ", false);
+			px.shortNumber(mLevel, false);
+			px.text(".");
+			px.pause();
+		}
 }
 
 void cPlayer::showInventory()
@@ -133,13 +168,13 @@ void cPlayer::showInventory()
 	{
 
 		px.text("Name: ", false);			// Name: Dagger		Desc: A curved menacing short blade
-		px.text(weapon_tmp->getName(), false);		// Damage: 2d8		Critical: 20 x2
-		px.text("\t\tDesc: ", false);			// Value: 200		Type: Handheld blade
+		px.text(weapon_tmp->getName(), false);		// Damage: 2d8		Critical: 20x2
+		px.text("        Desc: ", false);			// Value: 200		Type: Handheld blade
 		px.text(weapon_tmp->getDesc());		//
 		px.text("Damage: ", false);		px.shortNumber(weapon_tmp->getDice(), false);
 		px.text("d", false);		px.shortNumber(weapon_tmp->getDamage(), false);
-		px.text("\t\tCritical: ", false);	px.shortNumber(weapon_tmp->getCritical(), false); px.text(" x", false); px.shortNumber(weapon_tmp->getCritMod());
-		px.text("Value: ", false); px.shortNumber(weapon_tmp->getValue(), false); px.text("gp\tType: ", false); px.text(weapon_tmp->getType());
+		px.text("        Critical: ", false);	px.shortNumber(weapon_tmp->getCritical(), false); px.text("x", false); px.shortNumber(weapon_tmp->getCritMod());
+		px.text("Value: ", false); px.shortNumber(weapon_tmp->getValue(), false); px.text("gp    Type: ", false); px.text(weapon_tmp->getType());
 	} // end for weapon loop
 
 }

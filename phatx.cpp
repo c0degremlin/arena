@@ -52,7 +52,7 @@ void pxWindow::shortNumber(sint siOut, bool NL)
 	if(NL)
 		cout << siOut << endl;
 	else
-		cout << siOut << endl;
+		cout << siOut;
 	cout.flush();
 }
 

@@ -123,7 +123,7 @@ public:
 	cPlayer();
 	~cPlayer();
 
-	void fight(cMonster &enemy);
+	void level(); // level based on calculated tables
 
 	// addItem()
 	// delItem()
@@ -133,7 +133,7 @@ public:
 
 	void addWeapon(cWeapon item, int number = 0);
 	void delWeapon(cWeapon item, int number = 0);
-	void equipWeapon(int number);
+	void equipWeapon(cWeapon weapon, int number = 0);
 	void getWeapon(cWeapon &item, int number = 0);
 
 

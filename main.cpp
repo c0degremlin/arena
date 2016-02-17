@@ -14,6 +14,8 @@ void testing()
 	player.setWisdom(15); player.setCharisma(15);
 	player.mCreated = true;
 
+	player.equipWeapon(tmp);
+
 	player.calcHPandMP();
 
 }
@@ -410,23 +412,23 @@ void showStats(bool clrscr)
 	px.text(player.getName());	//		Weapon:		Armor:
 	px.text("Weapon: ", false);	//		Level: 		Experience:
 	px.text(player.getWeaponName(), false); //	Str: 	Dex:	Con:
-	px.text("\tArmor: ", false);	//		Int: 	Wis: 	Char:
+	px.text("    Armor: ", false);	//		Int: 	Wis: 	Char:
 	px.text(player.getArmorName());	//	Hit points: 65 / 80
 	px.text("Level: ", false);		//	Mana points: 35 / 45
 	px.shortNumber(player.getLevel(), false); //	Gold: 
-	px.text("\tExperience: ", false);
+	px.text("    Experience: ", false);
 	px.shortNumber(player.getExperience());
 	px.text("Str: ", false);
 	px.shortNumber(player.getStrength(), false);
-	px.text("\tDex: ", false);
+	px.text("    Dex: ", false);
 	px.shortNumber(player.getDexterity(), false);
-	px.text("\tCon: ", false);
+	px.text("    Con: ", false);
 	px.shortNumber(player.getConstitution());
 	px.text("Int: ", false);
 	px.shortNumber(player.getIntelligence(), false);
-	px.text("\tWis: ", false);
+	px.text("    Wis: ", false);
 	px.shortNumber(player.getWisdom(), false);
-	px.text("\tChar: ", false);
+	px.text("    Char: ", false);
 	px.shortNumber(player.getCharisma());
 	px.text("Hit points: ", false);		// Hit points: curr / max
 	px.shortNumber(player.getHealth(), false);
@@ -491,6 +493,8 @@ void fight()
 
 	while (bFightOver == false)
 	{
+		player.level();
+		player.setHealth(player.getMaxHealth());
 		px.clrscr();
 		for (gInt = 1; gInt <= player.getLevel(); gInt++)
 		{
@@ -505,6 +509,9 @@ void fight()
 		px.getS(gString, "Please make a choice: ");
 
 		ss.stringToNumber(gString, tmp);
+		
+		if(tmp>0)
+		tmp = 0;
 
 		// check for a quit selection
 		if (tmp == gInt)
@@ -521,23 +528,38 @@ void fight()
 			px.pause("Invalid choice.");
 			return;
 		}
+		
+		gInt = tmp;
+
+		if( gInt == player.getLevel() )
+			gInt = 300;
+		else if( gInt == ( player.getLevel() - 1))
+			gInt = 150;
+		else if( gInt == ( player.getLevel() -2))
+			gInt = 100;
+		else if( gInt == ( player.getLevel() - 3))
+			gInt = 50;
+		else if( gInt == ( player.getLevel() - 4))
+			gInt = 25;
+		else
+			gInt = 5;
 
 		switch (tmp)
 		{
 		case 1:
-			enemy.createEnemy("Orc", "Longsword", 20, 12, 50, 3, 12);
+			enemy.createEnemy("Orc", "Longsword", 20, 12, 50, 3, 12, gInt);
 			break;
 		case 2:
-			enemy.createEnemy("Orc", "Falchion", 35, 13, 150, 5, 15);
+			enemy.createEnemy("Orc", "Falchion", 35, 13, 150, 5, 15, gInt);
 			break;
 		case 3:
-			enemy.createEnemy("Orc", "Scimitar", 60, 14, 250, 7, 18);
+			enemy.createEnemy("Orc", "Scimitar", 60, 14, 250, 7, 18, gInt);
 			break;
 		case 4:
-			enemy.createEnemy("Orc", "Broadsword", 85, 15, 350, 9, 21);
+			enemy.createEnemy("Orc", "Broadsword", 85, 15, 350, 9, 21, gInt);
 			break;
 		case 5:
-			enemy.createEnemy("Orc", "Waraxe", 100, 16, 450, 11, 24);
+			enemy.createEnemy("Orc", "Waraxe", 100, 16, 450, 11, 24, gInt);
 			break;
 		default:
 			px.pause("Invalid choice.");
@@ -767,6 +789,10 @@ void fight()
 		gShort = player.getGold();
 		gShort += eGold;
 		player.setGold(gShort);
+		
+		gShort = player.getExperience();
+		gShort += eXP;
+		player.setExperience(gShort);
 
 		bFightOver = true;
 	} // fight over while loop
