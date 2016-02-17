@@ -6,10 +6,10 @@ cMonster::cMonster()
 	gNumOfMonsters += 1; monsterCanRun = false; // mostly only prey can run...
 }
 
-cMonster::cMonster(sint iHealth, sint iArmor, sint iGold, sint iAttack, sint iAP, bool iCanRun)
+cMonster::cMonster(sint iHealth, sint iArmor, sint iGold, sint iAttack, sint iAP, sint iXP, bool iCanRun)
 {
 	// use functions for cleaner error checking such as 0 health, 0 attack, 0 armor
-	setHealth(iHealth); setArmor(iArmor); setGold(iGold); setAttack(iAttack); setAP(iAP);
+	setHealth(iHealth); setArmor(iArmor); setGold(iGold); setAttack(iAttack); setAP(iAP); setExperience(iXP);
 
 	monsterCanRun = iCanRun; gNumOfMonsters += 1;
 }
@@ -17,6 +17,20 @@ cMonster::cMonster(sint iHealth, sint iArmor, sint iGold, sint iAttack, sint iAP
 cMonster::~cMonster()
 {
 	gNumOfMonsters -= 1;
+}
+
+void cMonster::createEnemy(string name, string weapon, sint health, sint armor, sint gold, sint attack, sint ap, sint xp)
+{
+	mName = name; mEquippedWeaponName = weapon;
+	mHealth = health; mArmor = armor; mGold = gold; mAttack = attack; mAP = ap; mExperience = xp;
+}
+
+sint cMonster::getMod(sint in)
+{
+	sint tmp = in;
+	in -= 10;
+	in /= 2;
+	return in;
 }
 
 bool cMonster::delAP(sint num)
@@ -62,7 +76,6 @@ cPlayer::~cPlayer()
 
 }
 
-
 void cPlayer::addAP(sint num)
 {
 	gShort = mAP + num;
@@ -87,7 +100,24 @@ void cPlayer::addWeapon(cWeapon item, int number)
 
 void cPlayer::delWeapon(cWeapon item, int number)
 {
+	if (number == 0)	// default add to top of the stack
+		mWeaponInventory.pop_back();
+	else			// replace specfic item
+		mWeaponInventory.erase(mWeaponInventory.begin(), mWeaponInventory.begin() + number);
+}
 
+void cPlayer::equipWeapon(int number)
+{
+	cWeapon tmp;
+	tmp = mWeaponInventory.at(number);
+	mEquippedWeaponName = tmp.getName();
+	mEquippedWeaponDesc = tmp.getDesc();
+	mAttack = tmp.getDamage();
+}
+
+void cPlayer::getWeapon(cWeapon &item, int number)
+{
+	item = mWeaponInventory.at(number);
 }
 
 void cPlayer::showInventory()
@@ -114,20 +144,24 @@ void cPlayer::showInventory()
 
 }
 
-void cPlayer::calcHPandMP( cPlayer &player )
+void cPlayer::calcHPandMP()
 {
 
-	sint hp, maxhp, mana, maxmana;
+	sint hp, maxhp, mana, maxmana, ap, maxap;
 
-	hp = player.getConstitution();
+	hp = mConstituion;
 	hp *= const_hpScaling;
 	maxhp = hp;
 
-	mana = player.getIntelligence();
+	mana = mIntelligence;
 	mana *= const_manaScaling;
 	maxmana = mana;
 
-	player.setHealth(hp); player.setMaxHealth(maxhp);
-	player.setMana(mana); player.setMaxMana(maxmana);
+	ap = mDexterity;
+	ap *= const_apScaling;
+	maxap = ap;
 
+	mHealth = hp; mMaxHealth = maxhp;
+	mMana = mana; mMaxMana = maxmana;
+	mAP = ap; mMaxAP = maxap;
 }

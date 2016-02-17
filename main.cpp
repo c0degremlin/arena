@@ -7,21 +7,15 @@ int gNumOfMonsters = 0;
 
 void testing()
 {
-	cWeapon tmp(const_unarmedDamage, const_unarmedDice, const_unarmedCritical, const_unarmedCritMod, const_unarmedValue, "Bare knuckles", "Bare knuckle bashing", "weapon");
+	cWeapon tmp(const_greatswordDamage, const_greatswordDice, const_greatswordCritical,
+	const_greatswordCritMod, const_greatswordValue, "Greatsword", "A menacing and gigantic sword dripping with blood.", "weapon");
 	player.addWeapon(tmp);
-	player.setName("test"); player.setStrength(15); player.setDexterity(15); player.setConstitution(15); player.setIntelligence(15);
+	player.setName("Faldor"); player.setStrength(15); player.setDexterity(15); player.setConstitution(15); player.setIntelligence(15);
 	player.setWisdom(15); player.setCharisma(15);
 	player.mCreated = true;
 
-	gShort = player.getConstitution();
-	gShort *= const_hpScaling;
+	player.calcHPandMP();
 
-	player.setHealth(gShort);	player.setMaxHealth(gShort);
-
-	gShort = 0; gShort = player.getIntelligence();
-	gShort *= const_manaScaling;
-
-	player.setMana(gShort);	player.setMaxMana(gShort);
 }
 
 int main()
@@ -50,8 +44,8 @@ int main()
 			purchase();
 		else if (gString == "c" || gString == "C")
 			showStats();
-		else if (gString == "d" || gString == "D") {}
-		// FIGHT!
+		else if (gString == "d" || gString == "D")
+			fight();
 		else if (gString == "q" || gString == "Q")
 			gIsGameOver = true;
 		else
@@ -393,7 +387,7 @@ void rollStats()
 
 		isStatsRolled = true;
 
-		player.calcHPandMP( player );
+		player.calcHPandMP();
 
 		player.mCreated = true;
 
@@ -454,4 +448,339 @@ void showStats(bool clrscr)
 void purchase()
 {
 
+}
+
+// fight enemies your level or lower
+void fight()
+{
+	cMonster enemy;
+	cWeapon cweapon;
+
+	int tmp;
+
+	sint iInitiative, eInitiative;
+	sint iAttackRoll, eAttackRoll;
+	sint iDamageRoll, eDamageRoll;
+	sint iArmorClass, eArmorClass;
+
+	sint roundCount = 1;
+
+	sint eHP, eAC, eAP, eGold, eXP;
+	sint eDexMod, iDexMod, eStrMod, iStrMod;
+
+	bool bFightOver = false;
+
+	string eName, eWeaponName;
+
+	px.rng(iInitiative);
+	px.rng(eInitiative);
+
+	px.rng(iAttackRoll);
+	px.rng(eAttackRoll);
+
+	px.rng(iDamageRoll);
+	px.rng(eDamageRoll);
+
+	player.getWeapon(cweapon);
+
+	if (player.mCreated == false) // no player
+	{
+		px.pause("No character found.");
+		return;
+	}
+
+	while (bFightOver == false)
+	{
+		px.clrscr();
+		for (gInt = 1; gInt <= player.getLevel(); gInt++)
+		{
+			px.number(gInt, false);
+			px.text(". Fight level ", false);
+			px.number(gInt);
+		}
+
+		px.number(gInt,false);
+		px.text(". Leave arena");
+
+		px.getS(gString, "Please make a choice: ");
+
+		ss.stringToNumber(gString, tmp);
+
+		// check for a quit selection
+		if (tmp == gInt)
+		{
+			// quit
+			px.getS(gString, "Are you sure you want to leave the arena? Y or N ");
+
+			if (gString == "y" || gString == "Y")
+				bFightOver = true;
+		}
+
+		if (tmp > player.getLevel())
+		{
+			px.pause("Invalid choice.");
+			return;
+		}
+
+		switch (tmp)
+		{
+		case 1:
+			enemy.createEnemy("Orc", "Longsword", 20, 12, 50, 3, 12);
+			break;
+		case 2:
+			enemy.createEnemy("Orc", "Falchion", 35, 13, 150, 5, 15);
+			break;
+		case 3:
+			enemy.createEnemy("Orc", "Scimitar", 60, 14, 250, 7, 18);
+			break;
+		case 4:
+			enemy.createEnemy("Orc", "Broadsword", 85, 15, 350, 9, 21);
+			break;
+		case 5:
+			enemy.createEnemy("Orc", "Waraxe", 100, 16, 450, 11, 24);
+			break;
+		default:
+			px.pause("Invalid choice.");
+			break;
+		}
+
+		eHP = enemy.getHealth();
+		eAC = enemy.getArmor();
+		eAP = enemy.getAP();
+		eGold = enemy.getGold();
+		eXP = enemy.getExperience();
+
+		eName = enemy.getName();
+		eWeaponName = enemy.getWeaponName();
+
+		gShort = player.getMod(player.getDexterity());
+		iInitiative += gShort;
+
+		// attack roll
+		iStrMod = (player.getLevel() + player.getMod(player.getStrength()));
+		eStrMod = tmp;
+
+		iDexMod = (player.getLevel() + player.getMod(player.getDexterity()));
+		eDexMod = tmp;
+
+		iAttackRoll += iStrMod;
+		eAttackRoll += eStrMod;
+
+		gShort = eAC;
+		gShort += eDexMod;
+
+		eArmorClass = gShort;
+
+		gShort = player.getArmor();
+		gShort += iDexMod;
+
+		iArmorClass = gShort;
+
+		rollDamage(iDamageRoll, cweapon, iStrMod);
+		px.rng(eDamageRoll, enemy.getAttack());
+
+		px.text("Round ", false);
+		px.number(roundCount, false);
+		px.text(" (", false);
+		px.text(player.getName(), false);
+		px.text(" vs. ", false);
+		px.text(eName, false);
+		px.text(")");
+
+		px.number(player.getHealth(), false);
+		px.text("hp remaining");
+
+		// Initiative hit
+		// player first
+		if (iInitiative >= eInitiative)
+		{
+			// hit
+			if (iAttackRoll >= eArmorClass)
+			{
+				px.text("> ", false);
+				px.text(player.getName(), false);
+				px.text(" swings his ", false);
+				px.text(player.getWeaponName(), false);
+				px.text(" at his opponent ", false);
+				px.text(eName, false); if (iAttackRoll >= cweapon.getCritical()) // crit hit
+				{
+					rollDamage(iDamageRoll, cweapon, iStrMod, false);
+					px.text(" and critically hits for ", false);
+					px.number(iDamageRoll, false);
+					px.text(" damage!");
+				}
+				else
+				{
+					px.text(" and hits for ", false);
+					px.number(iDamageRoll, false);
+					px.text(" damage.");
+				}
+				eHP -= iDamageRoll;
+			}
+			// miss
+			else
+			{
+				px.text("> ", false);
+				px.text(player.getName(), false);
+				px.text(" swings his ", false);
+				px.text(player.getWeaponName(), false);
+				px.text(" at his opponent ", false);
+				px.text(eName, false);
+				px.text(" and misses.");
+			}
+			px.pause();
+		}
+
+		// enemy first
+		else
+		{
+			// enemy hit
+			if (eAttackRoll >= iArmorClass)
+			{
+				px.text("> ", false);
+				px.text(eName, false);
+				px.text(" swings his ", false);
+				px.text(eWeaponName, false);
+				px.text(" at ", false);
+				px.text(player.getName(), false);
+				px.text(" and hits for ", false);
+				px.number(eDamageRoll, false);
+				px.text(" damage.");
+
+				gShort = player.getHealth();
+				gShort -= eDamageRoll;
+				player.setHealth(gShort);
+			}
+			// enemy miss
+			else
+			{
+				px.text("> ", false);
+				px.text(eName, false);
+				px.text(" swings his ", false);
+				px.text(eWeaponName, false);
+				px.text(" at ", false);
+				px.text(player.getName(), false);
+				px.text(" and misses.");
+			}
+			px.pause();
+		}
+
+
+		while (eHP > 0)
+		{
+			px.clrscr();
+			roundCount++;
+
+			px.rng(iAttackRoll);
+			px.rng(eAttackRoll);
+
+			iAttackRoll += iStrMod;
+			eAttackRoll += eStrMod;
+
+			rollDamage(iDamageRoll, cweapon, iStrMod);
+			px.rng(eDamageRoll, enemy.getAttack());
+
+			// Round # (Player vs. enemy)
+			// hp remaining: #
+			// > Player swings his Weapon at enemy and misses
+			// > Enemy swings his eWeapon at player for # damage
+
+			px.text("Round ", false);
+			px.number(roundCount, false);
+			px.text(" ",false);
+			px.text(player.getName(), false);
+			px.text(" vs. ", false);
+			px.text(eName, false);
+			px.text(")");
+
+			px.number(player.getHealth(), false);
+			px.text("hp remaining");
+
+			// player hit
+			if (iAttackRoll >= eArmorClass)
+			{
+				px.text("> ", false);
+				px.text(player.getName(), false);
+				px.text(" swings his ", false);
+				px.text(player.getWeaponName(), false);
+				px.text(" at his opponent ", false);
+				px.text(eName, false);
+				if (iAttackRoll >= cweapon.getCritical()) // crit hit
+				{
+					rollDamage(iDamageRoll, cweapon, iStrMod,false);
+					px.text(" and critically hits for ", false);
+					px.number(iDamageRoll, false);
+					px.text(" damage!");
+				}
+				else
+				{
+					px.text(" and hits for ", false);
+					px.number(iDamageRoll, false);
+					px.text(" damage.");
+				}
+				eHP -= iDamageRoll;
+			}
+			// player miss
+			else
+			{
+				px.text("> ", false);
+				px.text(player.getName(), false);
+				px.text(" swings his ", false);
+				px.text(player.getWeaponName(), false);
+				px.text(" at his opponent ", false);
+				px.text(eName, false);
+				px.text(" and misses.");
+			}
+
+			// enemy hit
+			if (eAttackRoll >= iArmorClass)
+			{
+				px.text("> ", false);
+				px.text(eName, false);
+				px.text(" swings his ", false);
+				px.text(eWeaponName, false);
+				px.text(" at ", false);
+				px.text(player.getName(), false);
+				px.text(" and hits for ", false);
+				px.number(eDamageRoll, false);
+				px.text(" damage.");
+
+				gShort = player.getHealth();
+				gShort -= eDamageRoll;
+				player.setHealth(gShort);
+			}
+			// enemy miss
+			else
+			{
+				px.text("> ", false);
+				px.text(eName, false);
+				px.text(" swings his ", false);
+				px.text(eWeaponName, false);
+				px.text(" at ", false);
+				px.text(player.getName(), false);
+				px.text(" and misses.");
+			}
+
+			px.pause();
+		}
+
+		gShort = player.getGold();
+		gShort += eGold;
+		player.setGold(gShort);
+
+		bFightOver = true;
+	} // fight over while loop
+}
+
+void rollDamage(sint &in, cWeapon weapon, sint strmod, bool erase)
+{
+	if(erase)
+		in = 0;
+
+	for (int i = 0; i < weapon.getDice(); i++)
+	{
+		px.rng(gInt, weapon.getDamage());
+		in += gInt;
+	}
+	in += strmod;
 }

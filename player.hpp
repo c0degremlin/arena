@@ -27,7 +27,8 @@ extern pxSStream ss;
 extern int gNumOfMonsters;
 
 const float const_hpScaling = 1.2f;	// Constitution bonus
-const float const_manaScaling = 1.5;	// Intelligence bonus
+const float const_manaScaling = 1.5f;	// Intelligence bonus
+const float const_apScaling = 1.8f;	// Number of action points every five seconds
 const sint const_baseAC = 10;		// Without armor
 
 // Combat is to be based of an Action point system, for which this formula is still to
@@ -50,11 +51,14 @@ protected:
 	sint mGold;
 	sint mAttack; // damage
 	sint mAP; // action points
+	sint mExperience; // basics of xp
 public:
 	cMonster();
-	cMonster(sint iHealth, sint iArmor, sint iGold, sint iAttack, sint iAP, bool iCanRun);
+	cMonster(sint iHealth, sint iArmor, sint iGold, sint iAttack, sint iAP, sint iXP, bool iCanRun);
 	~cMonster();
-	void fight(cMonster &enemy);
+
+	void createEnemy(string name, string weapon, sint health, sint armor, sint gold, sint attack, sint ap, sint xp); // make a monster with these stats
+	sint getMod(sint in);
 
 	//accessors
 	const bool canMonsterRun() { return monsterCanRun; }
@@ -66,6 +70,7 @@ public:
 	const sint getGold() { return mGold; }
 	const sint getAttack() { return mAttack; }
 	const sint getAP() { return mAP; }
+	const int getExperience() { return mExperience; }
 
 	// zeros are for debugging purposes
 	void setRun(bool tmp) { monsterCanRun = tmp; }
@@ -77,6 +82,8 @@ public:
 	void setGold(sint iNum = 0) { if (iNum >= 0) mGold = iNum; }
 	void setAttack(sint iNum = 0) { if (iNum >= 0) mAttack = iNum; }
 	void setAP(sint iNum = 0) { if (iNum >= 0) mAP = iNum; }
+	void setExperience(int tmp) { if (tmp > 0) mExperience = tmp; }
+
 	// add and delete action points
 	void addAP(sint num = 1) { mAP += num; }
 	bool delAP(sint num = 1); // true if you have enough AP.
@@ -108,14 +115,15 @@ private:
 	int mWisdom; // for number of spells possible to learn and AP checks
 	int mCharisma; // for mind control, etc checks, better bartering skills, more powerful buffs
 
-	int mPotions; // can only have as many potions as level
-	int mExperience;
+	int mPotions; // can only have as many potions as level	
 	int mLevel;
 
 public:
 	bool mCreated;
 	cPlayer();
 	~cPlayer();
+
+	void fight(cMonster &enemy);
 
 	// addItem()
 	// delItem()
@@ -125,8 +133,12 @@ public:
 
 	void addWeapon(cWeapon item, int number = 0);
 	void delWeapon(cWeapon item, int number = 0);
+	void equipWeapon(int number);
+	void getWeapon(cWeapon &item, int number = 0);
+
+
 	void showInventory();
-	void calcHPandMP(cPlayer &player);
+	void calcHPandMP();
 
 	// Accessors
 	const string getWeaponDesc() { return mEquippedWeaponDesc; } const string getArmorName() { return mEquippedArmorName; }
@@ -135,7 +147,7 @@ public:
 	const int getMaxAP() { return mMaxAP; }	 const int getStrength() { return mStrength; } const int getDexterity() { return mDexterity; }
 	const int getConstitution() { return mConstituion; } const int getIntelligence() { return mIntelligence; } const int getWisdom() { return mWisdom; }
 	const int getCharisma() { return mCharisma; } const int getPotions() { return mPotions; }
-	const int getLevel() { return mLevel; } const int getExperience() { return mExperience; }
+	const int getLevel() { return mLevel; } 
 
 	void setWeaponDesc(string tmp) { mEquippedWeaponDesc = tmp; }
 	void setArmorName(string tmp) { mEquippedArmorName = tmp; } void setArmorDesc(string tmp) { mEquipedArmorDesc = tmp; }
@@ -146,8 +158,7 @@ public:
 	void setIntelligence(int tmp) { if (tmp > 7) mIntelligence = tmp; }
 	void setWisdom(int tmp) { if (tmp > 7) mWisdom = tmp; } void setCharisma(int tmp) { if (tmp > 7) mCharisma = tmp; }
 	void setPotions(int tmp) { if (tmp > 0) mPotions = tmp; }
-	void setLevel(int tmp) { if (tmp > 1) mLevel = tmp; } void setExperience(int tmp) { if (tmp > 0) mExperience = tmp; }
-
+	void setLevel(int tmp) { if (tmp > 1) mLevel = tmp; } 
 	void fullAP() { mAP = mMaxAP; }
 	void addAP(sint tmp = 1); // do check with maxAP
 	void delAP(sint tmp = 1);

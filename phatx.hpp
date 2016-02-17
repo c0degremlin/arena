@@ -68,6 +68,7 @@ public:
 	void flipBool() { if(mBool)mBool = false; else mBool = true; }
 	void flipBool(bool &bFlip) { if (bFlip)bFlip = false; else bFlip = true; }
 
+	void sleep(unsigned int mseconds);
 	///////////////////////////////////////////////////////////////////////////
 	// End Junk
 	///////////////////////////////////////////////////////////////////////////

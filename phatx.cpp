@@ -23,6 +23,12 @@ void pxWindow::rng(sint &iNum, sint iModifier)
 	iNum = mShort;
 }
 
+void pxWindow::sleep(unsigned int mseconds)
+{
+	clock_t goal = mseconds + clock();
+	while (goal > clock());
+}
+
 void pxWindow::text(string sOut, bool NL)
 {
 	if(NL)
@@ -111,5 +117,9 @@ void pxWindow::pause(string sMsg, string sText)
 
 void pxWindow::clrscr()
 {
-	nl(30);
+#ifdef WIN32
+	system("cls");
+#else
+	system("clear");
+#endif
 }
