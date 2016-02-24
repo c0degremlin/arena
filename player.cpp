@@ -59,7 +59,7 @@ cPlayer::cPlayer()
 
 	mHealth = mMaxHealth = mMana = mMaxMana = mGold = mAttack = mAP = mMaxAP = 0;
 
-	mStrength = mDexterity = mConstituion = mIntelligence = mWisdom = mCharisma = 0;
+	mStrength = mDexterity = mConstitution = mIntelligence = mWisdom = mCharisma = 0;
 
 	mArmor = const_baseAC; // base 10 AC
 	mAttack = const_unarmedDamage; // 1d3 unarmed
@@ -128,7 +128,6 @@ void cPlayer::level()
 	prevXP = 0;
 	prevLevel = 1;
 
-	nextXP = 1000;
 	nextLevel = 1;
 	
 	xpChart.push_back(prevXP);
@@ -148,9 +147,20 @@ void cPlayer::level()
 		if( mExperience >= xpChart.at(mLevel))
 		{
 			mLevel = levelChart.at(mLevel);
+			px.rng(gShort, 10);
+			gShort += getMod(mConstitution);
+			mHealth += gShort;
+			mMaxHealth = mHealth;
+			calcHPandMP();
+
 			px.text("You leveled up! You are now level ", false);
 			px.shortNumber(mLevel, false);
 			px.text(".");
+			
+			px.text("Your new hp is ", false);
+			px.shortNumber(mHealth, false);
+			px.text(".");
+
 			px.pause();
 		}
 }
@@ -184,7 +194,7 @@ void cPlayer::calcHPandMP()
 
 	sint hp, maxhp, mana, maxmana, ap, maxap;
 
-	hp = mConstituion;
+	hp = mConstitution;
 	hp *= const_hpScaling;
 	maxhp = hp;
 

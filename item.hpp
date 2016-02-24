@@ -39,7 +39,7 @@ const sint const_handaxeValue = 600;	// 600
 const sint const_shortswordDamage = 6;	// damage total
 const sint const_shortswordDice = 1;	// 1d
 const sint const_shortswordCritical = 19; // Roll a 19 for a critical hit
-const sint ocnst_shortswordCritMod = 2;	// x2 critical
+const sint const_shortswordCritMod = 2;	// x2 critical
 const sint const_shortswordValue = 650;	// 700 gp
 
 const sint const_scimitarDamage = 6;	// damage total
@@ -68,7 +68,7 @@ const sint const_longswordValue = 950;	// 950 gp
 
 const sint const_greatclubDamage = 10;	// damage total
 const sint const_greatclubDice = 1;	// 1d
-const sint const_greatclubCritcal = 20;		// Roll a 20 for a critical hit
+const sint const_greatclubCritical = 20;		// Roll a 20 for a critical hit
 const sint const_greatclubCritMod = 2;	// x2 critical
 const sint const_greatclubValue = 1100; // 1100 gp
 
@@ -182,7 +182,10 @@ protected:
 
 	sint mValue; // How much gold is this worth
 public:
-	cItem();
+	cItem(); 
+	sint getValue() { return mValue; }
+	void setValue(sint num) { mValue = num; }
+
 };
 
 class cWeapon : public cItem
@@ -205,12 +208,18 @@ public:
 	sint getCritical() { return mCritical; }
 	sint getCritMod() { return mCritMod; }
 	sint getIsEquipped() { return isEquipped; }
-	sint getValue() { return mValue; }
+	
 
 	string getName() { return mItemName; }
 	string getDesc() { return mItemDesc; }
 	string getType() { return mItemType; } // Weapon
 
+	void setDamage(sint num) { mDamage = num; }
+	void setDice(sint num) { mDice = num; }
+	void setCritical(sint num) { mCritical = num; }
+	void setCritMod(sint num) { mCritMod = num; }
+	void flipEquipped() { if (isEquipped) isEquipped = false; else isEquipped = true; }
+	
 };
 
 class cArmor : public cItem

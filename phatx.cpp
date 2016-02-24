@@ -19,7 +19,10 @@ void pxWindow::rng(int &iNum, int iModifier)
 
 void pxWindow::rng(sint &iNum, sint iModifier)
 {
-	mShort = ( rand() %  iModifier ) + 1;
+	if (iModifier > 0)
+		mShort = (rand() % iModifier) + 1;
+	else
+		mShort = (rand() % 1) + 1;
 	iNum = mShort;
 }
 
@@ -112,6 +115,7 @@ void pxWindow::pause(string sMsg, string sText)
         cout << sText << endl;
 	cout << sMsg << endl;
 	cout.flush();
+	cin.ignore();
 	cin.ignore();
 }
 

@@ -110,7 +110,7 @@ private:
 
 	int mStrength; // for attack rolls and armor/weapon checks
 	int mDexterity; // for hit checks, ranged, dagger, sword and unarmed attacks, dodge...
-	int mConstituion; // for health calcs and poison check
+	int mConstitution; // for health calcs and poison check
 	int mIntelligence; // for spell checks and damage, mana calcs, mind control, etc checks
 	int mWisdom; // for number of spells possible to learn and AP checks
 	int mCharisma; // for mind control, etc checks, better bartering skills, more powerful buffs
@@ -127,9 +127,7 @@ public:
 
 	// addItem()
 	// delItem()
-	// showInventory()
 	// heal()
-	// levelUp()
 
 	void addWeapon(cWeapon item, int number = 0);
 	void delWeapon(cWeapon item, int number = 0);
@@ -145,7 +143,7 @@ public:
 	const string getArmorDesc() { return mEquipedArmorDesc; } const string getClass() { return mClassName; }
 	const int getMaxHealth() { return mMaxHealth; } const int getMana() { return mMana; } const int getMaxMana() { return mMaxMana; }
 	const int getMaxAP() { return mMaxAP; }	 const int getStrength() { return mStrength; } const int getDexterity() { return mDexterity; }
-	const int getConstitution() { return mConstituion; } const int getIntelligence() { return mIntelligence; } const int getWisdom() { return mWisdom; }
+	const int getConstitution() { return mConstitution; } const int getIntelligence() { return mIntelligence; } const int getWisdom() { return mWisdom; }
 	const int getCharisma() { return mCharisma; } const int getPotions() { return mPotions; }
 	const int getLevel() { return mLevel; } 
 
@@ -154,7 +152,7 @@ public:
 	void setClass(string tmp) { mClassName = tmp; } void setMaxHealth(int tmp) { if (tmp > 0 && tmp >= mHealth) mMaxHealth = tmp; }
 	void setMana(int tmp) { if (tmp > 0) mMana = tmp; } void setMaxMana(int tmp) { if (tmp > 0 && tmp >= mMana) mMaxMana = tmp; }
 	void setMaxAP(int tmp) { if (tmp > 0 && tmp >= mAP) mMaxAP = tmp; } void setStrength(int tmp) { if (tmp > 7) mStrength = tmp; }
-	void setDexterity(int tmp) { if (tmp > 7) mDexterity = tmp; } void setConstitution(int tmp) { if (tmp > 7) mConstituion = tmp; }
+	void setDexterity(int tmp) { if (tmp > 7) mDexterity = tmp; } void setConstitution(int tmp) { if (tmp > 7) mConstitution = tmp; }
 	void setIntelligence(int tmp) { if (tmp > 7) mIntelligence = tmp; }
 	void setWisdom(int tmp) { if (tmp > 7) mWisdom = tmp; } void setCharisma(int tmp) { if (tmp > 7) mCharisma = tmp; }
 	void setPotions(int tmp) { if (tmp > 0) mPotions = tmp; }
