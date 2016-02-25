@@ -27,7 +27,6 @@ void cMonster::createEnemy(string name, string weapon, sint health, sint armor, 
 
 sint cMonster::getMod(sint in)
 {
-	sint tmp = in;
 	in -= 10;
 	in /= 2;
 	return in;

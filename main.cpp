@@ -1427,6 +1427,7 @@ void fight()
 		rollDamage(iDamageRoll, cweapon, iStrMod);
 		px.rng(eDamageRoll, enemy.getAttack());
 
+		px.clrscr();
 		px.text("Round ", false);
 		px.number(roundCount, false);
 		px.text(" (", false);
@@ -1518,8 +1519,9 @@ void fight()
 		{	
 			if (player.getHealth() <= 0 )
 			{
-				px.text("You have died.");
 				player.mCreated = false;
+				player.setExperience(0);
+				player.setGold(0);
 				break;
 			}
 			px.clrscr();
@@ -1541,7 +1543,7 @@ void fight()
 
 			px.text("Round ", false);
 			px.number(roundCount, false);
-			px.text(" ",false);
+			px.text(" (",false);
 			px.text(player.getName(), false);
 			px.text(" vs. ", false);
 			px.text(eName, false);
@@ -1588,6 +1590,9 @@ void fight()
 				px.text(eName, false);
 				px.text(" and misses.");
 			}
+			
+			if( eHP <= 0 ) // enemy dead
+				break;
 
 			// enemy hit
 			if (eAttackRoll >= iArmorClass)
@@ -1627,22 +1632,21 @@ void fight()
 			gShort += eGold;
 			player.setGold(gShort);
 
-			gShort = player.getExperience();
-			gShort += eXP;
-			player.setExperience(gShort);
-
 			px.text(eName, false);
 			px.text(" has lost. You have gained ", false);
-			px.number(player.getGold(), false);
+			px.number(gShort, false);
 			px.text(" and ", false);
-			px.number(player.getExperience(), false);
+			
+			gShort = player.getExperience();
+			gShort += eXP;
+			player.setExperience(gShort);			
+
+			px.number(gShort, false);
 			px.text(" experience.");
+			px.pause();
 		}
 		else // player died
-		{
 			px.pause("You have died. Please bring back more bodies!");
-			player.mCreated = false;
-		}
 		bFightOver = true;
 	} // fight over while loop
 }
