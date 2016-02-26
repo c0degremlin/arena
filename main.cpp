@@ -1634,14 +1634,14 @@ void fight()
 
 			px.text(eName, false);
 			px.text(" has lost. You have gained ", false);
-			px.number(gShort, false);
+			px.number(eGold, false);
 			px.text(" and ", false);
 			
 			gShort = player.getExperience();
 			gShort += eXP;
 			player.setExperience(gShort);			
 
-			px.number(gShort, false);
+			px.number(eXP, false);
 			px.text(" experience.");
 			px.pause();
 		}
