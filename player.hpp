@@ -82,7 +82,7 @@ public:
 	void setGold(sint iNum = 0) { if (iNum >= 0) mGold = iNum; }
 	void setAttack(sint iNum = 0) { if (iNum >= 0) mAttack = iNum; }
 	void setAP(sint iNum = 0) { if (iNum >= 0) mAP = iNum; }
-	void setExperience(int tmp) { if (tmp > 0) mExperience = tmp; }
+	void setExperience(int tmp) { if (tmp >= 0) mExperience = tmp; }
 
 	// add and delete action points
 	void addAP(sint num = 1) { mAP += num; }

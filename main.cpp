@@ -1286,6 +1286,7 @@ void fight()
 	cWeapon cweapon;
 
 	int tmp;
+	sint xpCalc;
 
 	sint iInitiative, eInitiative;
 	sint iAttackRoll, eAttackRoll;
@@ -1298,6 +1299,7 @@ void fight()
 	sint eDexMod, iDexMod, eStrMod, iStrMod;
 
 	bool bFightOver = false;
+	bool bQuit = false;
 
 	string eName, eWeaponName;
 
@@ -1317,45 +1319,64 @@ void fight()
 		px.pause("No character found.");
 		return;
 	}
-
-	while (bFightOver == false)
+	while( !bQuit )
 	{
-		player.level();
-		player.setHealth(player.getMaxHealth());
-		px.clrscr();
-		for (gInt = 1; gInt <= player.getLevel(); gInt++)
-		{
-			px.number(gInt, false);
-			px.text(". Fight level ", false);
-			px.number(gInt);
-		}
+	px.clrscr();
+	for (gInt = 1; gInt <= player.getLevel(); gInt++)
+	{
+		px.number(gInt, false);
+		px.text(". Fight level ", false);
+		px.number(gInt);
+	}
 
-		px.number(gInt,false);
-		px.text(". Leave arena");
+	px.number(gInt,false);
+	px.text(". Leave arena");
 
-		px.getS(gString, "Please make a choice: ");
+	px.getS(gString, "Please make a choice: ");
 
-		ss.stringToNumber(gString, tmp);
+	ss.stringToNumber(gString, tmp);
 
-		// check for a quit selection
-		if (tmp == gInt)
-		{
-			// quit
-			px.getS(gString, "Are you sure you want to leave the arena? Y or N ");
+	// check for a quit selection
+	if (tmp == gInt)
+	{
+		// quit
+		px.getS(gString, "Are you sure you want to leave the arena? Y or N ");
 
-			if (gString == "y" || gString == "Y")
-				bFightOver = true;
-		}
+		if (gString == "y" || gString == "Y")
+			return;
+		else
+			bFightOver = true;
+	}
+	while( !bFightOver )
+	{
+		if( bFightOver )
+			break;
 
-		if (tmp > player.getLevel())
+			// add one to exit
+		if (tmp > ( player.getLevel() + 1) )
 		{
 			px.pause("Invalid choice.");
 			bFightOver = true;
 			break;
 		}
 		
-		gInt = tmp;
+		xpCalc = tmp;
+		// Xp downgrade
+		if( xpCalc == player.getLevel() )
+			xpCalc = 150;
+		else if( xpCalc == (player.getLevel() - 1 ) )
+			xpCalc = 100;
+		else if( xpCalc == (player.getLevel() - 2 ) )
+			xpCalc = 75;
+		else if( xpCalc == (player.getLevel() - 3 ) )
+			xpCalc = 50;
+		else if( xpCalc == (player.getLevel() - 4 ) )
+			xpCalc = 25;
+		else
+			xpCalc = 5;
 
+		// Gold downgrade
+		gInt = tmp;
 		if( gInt == player.getLevel() )
 			gInt = 300;
 		else if( gInt == ( player.getLevel() - 1))
@@ -1372,19 +1393,19 @@ void fight()
 		switch (tmp)
 		{
 		case 1:
-			enemy.createEnemy("Orc", "Longsword", 20, 12, 50, 3, 12, gInt);
+			enemy.createEnemy("Orc", "Longsword", 20, 12, xpCalc, 3, 12, gInt);
 			break;
 		case 2:
-			enemy.createEnemy("Orc", "Falchion", 35, 13, 150, 5, 15, gInt);
+			enemy.createEnemy("Orc", "Falchion", 35, 13, xpCalc, 5, 15, gInt);
 			break;
 		case 3:
-			enemy.createEnemy("Orc", "Scimitar", 60, 14, 250, 7, 18, gInt);
+			enemy.createEnemy("Orc", "Scimitar", 60, 14, xpCalc, 7, 18, gInt);
 			break;
 		case 4:
-			enemy.createEnemy("Orc", "Broadsword", 85, 15, 350, 9, 21, gInt);
+			enemy.createEnemy("Orc", "Broadsword", 85, 15, xpCalc, 9, 21, gInt);
 			break;
 		case 5:
-			enemy.createEnemy("Orc", "Waraxe", 100, 16, 450, 11, 24, gInt);
+			enemy.createEnemy("Orc", "Waraxe", 100, 16, xpCalc, 11, 24, gInt);
 			break;
 		default:
 			px.pause("Invalid choice.");
@@ -1392,6 +1413,8 @@ void fight()
 			return;
 		}
 
+		if(bFightOver)
+			break;
 		eHP = enemy.getHealth();
 		eAC = enemy.getArmor();
 		eAP = enemy.getAP();
@@ -1635,7 +1658,7 @@ void fight()
 			px.text(eName, false);
 			px.text(" has lost. You have gained ", false);
 			px.number(eGold, false);
-			px.text(" and ", false);
+			px.text(" gold and ", false);
 			
 			gShort = player.getExperience();
 			gShort += eXP;
@@ -1649,6 +1672,14 @@ void fight()
 			px.pause("You have died. Please bring back more bodies!");
 		bFightOver = true;
 	} // fight over while loop
+	
+	if( player.getHealth() > 0 )
+	{
+		// reset player health
+		player.setHealth( player.getMaxHealth() );
+		player.level();
+	}
+	}	// bQuit while loop end
 }
 
 void rollDamage(sint &in, cWeapon weapon, sint strmod, bool erase)

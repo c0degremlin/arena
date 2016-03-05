@@ -2,12 +2,8 @@
 
 finish armor and weapon inventory ( add functionality to it, base is half assed )
 
-exiting arena produces invalid choice output errorounsly
-fighting lvl 1 monster @ lvl 2 doesn't downgrade the bonuses
-when recieving gold and xp, gold isn't named as what is being recieved
-
+add weapon name and descriptions when adding them to inventory, should make them const strings
 finish adding armor purchase and wrap up weapon purchases
-dont allow player to fight enemy with less than 0 hp. immediately detect and break out of loop
 
 add more variations to enemys, stats, weapons and armor.
 add items such as potions, scrolls, arrow and bolt quanitys
