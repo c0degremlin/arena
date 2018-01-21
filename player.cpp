@@ -41,7 +41,7 @@ bool cMonster::delAP(sint num)
 	}
 	else
 	{
-		px.pause("Can't do that. You are too tired.\nPress enter to continue..."); return false;
+		px.pause("Can't do that. You are too tired."); return false;
 	}
 }
 
@@ -97,20 +97,30 @@ void cPlayer::addWeapon(cWeapon item, int number)
 		mWeaponInventory.at(number) = item;
 }
 
-void cPlayer::delWeapon(cWeapon item, int number)
+void cPlayer::delWeapon(int number)
 {
-	if (number == 0)	// default add to top of the stack
+	if (number == 0)	// default remove from top of the stack
 		mWeaponInventory.pop_back();
 	else			// replace specfic item
 		mWeaponInventory.erase(mWeaponInventory.begin(), mWeaponInventory.begin() + number);
 }
 
-void cPlayer::equipWeapon(cWeapon weapon, int number)
+void cPlayer::equipWeapon(int number)
 {
-	weapon = mWeaponInventory.at(number);
-	mEquippedWeaponName = weapon.getName();
-	mEquippedWeaponDesc = weapon.getDesc();
-	mAttack = weapon.getDamage();
+	if (mWeapon.getIsEquipped())
+	{
+		px.text(mWeapon.getName(), false);
+		px.text(" is already equipped...");
+		px.pause();
+	}
+	else
+	{
+		mWeapon = mWeaponInventory.at(number);
+		mEquippedWeaponName = mWeapon.getName();
+		mEquippedWeaponDesc = mWeapon.getDesc();
+		mAttack = mWeapon.getDamage();
+		mWeapon.flipEquipped();
+	}
 }
 
 void cPlayer::getWeapon(cWeapon &item, int number)

@@ -3,9 +3,10 @@
 // Todo:
 // finish cPlayer
 // polish cMonster
-// add combat
 // add inventory
-//
+// Make sure cPlayer all variables are initialized
+// Also make sure we trim away unneccesary variables and such
+
 //   Bugs:
 
 
@@ -17,6 +18,8 @@
 #include "phatx.hpp"
 #include "phatSS.hpp"
 #include "item.hpp"
+#include "weapon.hpp"
+#include "armor.hpp"
 
 #include <vector>
 using std::vector;
@@ -33,7 +36,7 @@ const sint const_baseAC = 10;		// Without armor
 
 // Combat is to be based of an Action point system, for which this formula is still to
 // be determined
-// Experience is based on player level, along with random spawns, 5 classes, minotuar is seperate and hardest class
+// Experience is based on player level, along with random spawns, 5 classes of enemies, minotuar is seperate and hardest class
 // See Plan.txt for more details
 
 // Basics of a player
@@ -96,6 +99,10 @@ private:
 
 	vector<cWeapon> mWeaponInventory;
 	vector<cArmor> mArmorInventory;
+	
+
+	cWeapon mWeapon; // This is the equipped stuff
+	cArmor mArmor;
 
 	string mEquippedWeaponDesc;
 	string mEquippedArmorName;
@@ -130,8 +137,8 @@ public:
 	// heal()
 
 	void addWeapon(cWeapon item, int number = 0);
-	void delWeapon(cWeapon item, int number = 0);
-	void equipWeapon(cWeapon weapon, int number = 0);
+	void delWeapon(int number = 0);
+	void equipWeapon(int number = 0);
 	void getWeapon(cWeapon &item, int number = 0);
 
 
@@ -159,7 +166,7 @@ public:
 	void setLevel(int tmp) { if (tmp > 1) mLevel = tmp; } 
 	void fullAP() { mAP = mMaxAP; }
 	void addAP(sint tmp = 1); // do check with maxAP
-	void delAP(sint tmp = 1);
+	void delAP(sint tmp = 1); // do an advanced check here
 };
 
 #endif

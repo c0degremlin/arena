@@ -111,12 +111,13 @@ void pxWindow::getI(int &iIn, string sMsg)
 // pauses the c++ way
 void pxWindow::pause(string sMsg, string sText)
 {
-    if( sText.empty() == false )
-        cout << sText << endl;
 	cout << sMsg << endl;
-	cout.flush();
+
+	if (sText.empty() == false)
+		cout << sText << endl;
+
 	cin.ignore();
-	cin.ignore();
+
 }
 
 void pxWindow::clrscr()

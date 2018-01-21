@@ -6,6 +6,16 @@
 // Phat eXploding Window - Founder, Shane Laffond
 /////////////////////////////////////////////////////////////////////////////*/
 
+/*
+
+//	Todo:
+
+//  Bugs:
+
+If you try to pass non intergers it crashes use sstreams to make it proper and avoid crashes like a proper programmer.
+Assume user is your grandma and "She didn't know what happened it was there and now its not" :D
+
+*/
 
 #ifndef _PHAT_SS_H
 #define _PHAT_SS_H
@@ -25,6 +35,7 @@ using std::getline; // for getline( string, count )
 using std::fstream; // file stream
 using std::ofstream; // in file stream
 using std::ifstream; // out file stream
+
 using std::ios;
 using std::ios_base;
 using std::ws; // whitespace
@@ -86,7 +97,7 @@ public:
 	void getS(string &sIn, string sMsg = "");
 	void getShort(sint &siIn, string sMsg = "");
 	void getI(int &iIn, string sMsg = "");
-	void pause(string sMsg = "Press enter to contiune...", string sText = "");
+	void pause(string sMsg = "", string sText = "Press enter to contiune...");
 };
 
 #endif
