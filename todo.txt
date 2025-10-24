@@ -6,6 +6,7 @@ add weapon desc as const strings
 add armor name and desc as const strings
 ^^ Add these when purchasing
 
+fight function is buggy
 
 finish adding armor purchase
 

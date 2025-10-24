@@ -20,6 +20,33 @@ BEGIN ARMOR
 =================================================
 */
 
+const string const_unarmorName = "Unarmored";
+const string const_paddedName = "Padded";
+const string const_leatherName = "Leather";
+const string const_hideName = "Hide";
+const string const_studdedName = "Studded Leather";
+const string const_scaleName = "Scale";
+const string const_chainshirtName = "Chain Shirt";
+const string const_chainmailName = "Chain Mail";
+const string const_breastplateName = "BreastPlate";
+const string const_splintName = "Splint Mail";
+const string const_bandedName = "Banded Splint Mail";
+const string const_halfplateName = "Half Plate Suit";
+const string const_fullplateName = "Full Plate Suit";
+
+const string const_unarmorDesc = "None";
+const string const_paddedDesc = "Padded quilted material, very low protection.";
+const string const_leatherDesc = "Leather armor, made from animal skins.";
+const string const_hideDesc = "Hide armor, made from lizards and tough skins.";
+const string const_studdedDesc = "Studded Leather, made from animal skins and studded for added rigidity.";
+const string const_scaleDesc = "Scale mail, movable and breathable hide armor.";
+const string const_chainshirtDesc = "Chain Shirt, loops of metal to protect the torso.";
+const string const_chainmailDesc = "Chain Mail, loops of metal to protect the torso and limbs.";
+const string const_breastplateDesc = "BreastPlate, thick metal to protect the torso and arms.";
+const string const_splintDesc = "Splint Mail, thin strips of metal to allow walking.";
+const string const_bandedDesc = "Banded Splint Mail, thin strips of metal, held closer together with leather strips.";
+const string const_halfplateDesc = "Half Plate Suit, thick solid pieces of metal to protect the torso.";
+const string const_fullplateDesc = "Full Plate Suit, thick solid pieces of metal to protect the whole body.";
 
 const sint const_unarmoredAC = 0;	// +0
 const sint const_unarmoredDex = 100;	// cant have dex bonus more than that!
@@ -89,7 +116,7 @@ private:
 	bool isEquipped; // Am i wearing this?
 
 public:
-	cArmor(sint dex = 0, sint ac = 0, sint value = 0, string name = "", string desc = "", string type = "") ;
+	cArmor(sint dex = 0, sint ac = 0, sint value = 0, string name = "", string desc = "", string type = "armor") ;
 
 	virtual void clear(); // Reset all values
 						  // Accesors

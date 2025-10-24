@@ -155,7 +155,7 @@ protected:
 	bool isEquipped; // Do i have this readied	
 
 public:
-	cWeapon(sint dmg = 0, sint dice = 0, sint crit = 0, sint critmod = 0, sint value = 0, string name = "", string desc = "", string type = "");
+	cWeapon(sint dmg = 0, sint dice = 0, sint crit = 0, sint critmod = 0, sint value = 0, string name = "", string desc = "", string type = "weapon");
 
 	virtual void clear(); // Reset all values
 						  // Accesors
@@ -168,7 +168,7 @@ public:
 
 	string getName() { return mItemName; }
 	string getDesc() { return mItemDesc; }
-	string getType() { return mItemType; } // Weapon
+	string getType() { return mItemType; } // weapon
 	void setDamage(sint num) { mDamage = num; }
 	void setDice(sint num) { mDice = num; }
 	void setCritical(sint num) { mCritical = num; }
