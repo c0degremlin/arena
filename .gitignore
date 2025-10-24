@@ -18,3 +18,5 @@ Debug/arena.tlog/link.read.1.tlog
 *.idb
 *.pdb
 Debug/main.obj.enc
+*.o
+
