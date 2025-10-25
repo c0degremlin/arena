@@ -13,6 +13,9 @@ pxSStream::pxSStream()
 
 pxSStream::~pxSStream()
 {
+	if(errOut.is_open()){
+		errOut.close(); // was leaking memory 
+	}
 }
 
 // Converts an int to string C++ way

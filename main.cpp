@@ -163,9 +163,9 @@ void rollStats()
 	{
 		while (!nextStat)
 		{
-			do { 	// Roll 8-17 or more
-				px.rng(tmp);
-			} while (tmp < 7 && tmp <= 17);
+			// Roll 8-17
+			px.rng(tmp, 8, 17);
+			
 			if (rollCount > 0)
 			{
 				rollCount--;
@@ -203,9 +203,8 @@ void rollStats()
 		nextStat = false;
 		while (!nextStat)
 		{
-			do {	// Roll 8 - 17
-				px.rng(tmp);
-			} while (tmp < 7 && tmp <= 17);
+			// Roll 8-17
+			px.rng(tmp, 8, 17);
 			if (rollCount > 0)
 			{
 				rollCount--;
@@ -243,9 +242,8 @@ void rollStats()
 		nextStat = false;
 		while (!nextStat)
 		{
-			do {	// Roll 8 - 17
-				px.rng(tmp);
-			} while (tmp < 7 && tmp <= 17);
+			// Roll 8-17
+			px.rng(tmp, 8, 17);
 			if (rollCount > 0)
 			{
 				rollCount--;
@@ -283,10 +281,9 @@ void rollStats()
 		nextStat = false;
 		while (!nextStat)
 		{
-			do {	// Roll 8 - 17
-				px.rng(tmp);
-			} while (tmp < 7 && tmp <= 17);
-			if (rollCount > 0)
+			// Roll 8-17
+			px.rng(tmp, 8, 17);
+				if (rollCount > 0)
 			{
 				rollCount--;
 				px.clrscr();
@@ -323,9 +320,8 @@ void rollStats()
 		nextStat = false;
 		while (!nextStat)
 		{
-			do {	// Roll 8 - 17
-				px.rng(tmp);
-			} while (tmp < 7 && tmp <= 17);
+			// Roll 8-17
+			px.rng(tmp, 8, 17);
 			if (rollCount > 0)
 			{
 				rollCount--;
@@ -363,9 +359,8 @@ void rollStats()
 		nextStat = false;
 		while (!nextStat)
 		{
-			do {	// Roll 8 - 17
-				px.rng(tmp);
-			} while (tmp < 7 && tmp <= 17);
+			// Roll 8-17
+			px.rng(tmp, 8, 17);
 			if (rollCount > 0)
 			{
 				rollCount--;
@@ -1097,7 +1092,7 @@ void fight()
 
 			// extra random dont forget to change me when you add more enemies.
 			for(int i = 0; i < 25; i++)
-				px.rng(tmp, 5);
+				px.rng(tmp, 5, 5);
 			switch (tmp)
 			{
 			case 1:
@@ -1152,7 +1147,7 @@ void fight()
 
 			
 			rollDamage(iDamageRoll, cweapon, iStrMod);
-			px.rng(eDamageRoll, enemy.getAttack());
+			px.rng(eDamageRoll, enemy.getAttack(), enemy.getAttack());
 
 			px.clrscr();
 			px.text("Round ", false);
@@ -1265,7 +1260,7 @@ void fight()
 				iAttackRoll += iStrMod;
 
 				rollDamage(iDamageRoll, cweapon, iStrMod);
-				px.rng(eDamageRoll, enemy.getAttack());
+				px.rng(eDamageRoll, enemy.getAttack(), enemy.getAttack());
 
 				// Round # (Player vs. enemy)
 				// hp remaining: #
@@ -1405,7 +1400,7 @@ void rollDamage(sint &in, cWeapon weapon, sint strmod, bool erase)
 
 	for (int i = 0; i < weapon.getDice(); i++)
 	{
-		px.rng(gInt, weapon.getDamage());
+		px.rng(gInt, weapon.getDamage(), weapon.getDamage());
 		in += gInt;
 	}
 	in += strmod;

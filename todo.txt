@@ -3,7 +3,6 @@
 finish armor and weapon inventory ( add functionality to it, base is half assed )
 
 add weapon desc as const strings
-add armor name and desc as const strings
 ^^ Add these when purchasing
 
 fight function is buggy

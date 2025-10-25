@@ -16,22 +16,16 @@ If you try to pass non intergers it crashes use sstreams to make it proper and a
 Assume user is your grandma and "She didn't know what happened it was there and now its not" :D
 
 */
-
 #ifndef _PHAT_SS_H
 #define _PHAT_SS_H
-
 
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
-#include <fstream>
-#include <string>
-
-using std::string;
 using std::cin;
 using std::cout;
 using std::endl;
-using std::getline; // for getline( string, count )
+#include <fstream>
 using std::fstream; // file stream
 using std::ofstream; // in file stream
 using std::ifstream; // out file stream
@@ -39,6 +33,9 @@ using std::ifstream; // out file stream
 using std::ios;
 using std::ios_base;
 using std::ws; // whitespace
+#include <string>
+using std::string;
+using std::getline; // for getline( string, count )
 
 typedef short int sint;
 
@@ -72,8 +69,8 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 
 	// default to d20
-	void rng(int &iNum, int iModifier = 20);
-	void rng(sint &iNum, sint iModifier = 20);
+	void rng(int &iNum, int iMin = 1, int iMax = 20);
+	void rng(sint &sNum, sint sMin = 1, sint sMax = 20);
 
 	// local accessors
 	void flipBool() { if(mBool)mBool = false; else mBool = true; }

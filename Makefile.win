@@ -1,0 +1,49 @@
+# Project: arena
+# Makefile created by Embarcadero Dev-C++ 6.3
+
+CPP      = g++.exe -D__DEBUG__
+CC       = gcc.exe -D__DEBUG__
+WINDRES  = windres.exe
+OBJ      = main.o armor.o inventory.o item.o phatSS.o phatx.o player.o weapon.o
+LINKOBJ  = main.o armor.o inventory.o item.o phatSS.o phatx.o player.o weapon.o
+LIBS     = -L"C:/Users/hopehouse/Downloads/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/lib32" -static-libgcc -m32 -g3
+INCS     = -I"C:/Users/hopehouse/Downloads/Dev-Cpp/TDM-GCC-64/include" -I"C:/Users/hopehouse/Downloads/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include" -I"C:/Users/hopehouse/Downloads/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include"
+CXXINCS  = -I"C:/Users/hopehouse/Downloads/Dev-Cpp/TDM-GCC-64/include" -I"C:/Users/hopehouse/Downloads/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include" -I"C:/Users/hopehouse/Downloads/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include" -I"C:/Users/hopehouse/Downloads/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++"
+BIN      = arena.exe
+CXXFLAGS = $(CXXINCS) -m32 -g3
+CFLAGS   = $(INCS) -m32 -g3
+DEL      = C:\Users\hopehouse\Downloads\Dev-Cpp\devcpp.exe INTERNAL_DEL
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${DEL} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+armor.o: armor.cpp
+	$(CPP) -c armor.cpp -o armor.o $(CXXFLAGS)
+
+inventory.o: inventory.cpp
+	$(CPP) -c inventory.cpp -o inventory.o $(CXXFLAGS)
+
+item.o: item.cpp
+	$(CPP) -c item.cpp -o item.o $(CXXFLAGS)
+
+phatSS.o: phatSS.cpp
+	$(CPP) -c phatSS.cpp -o phatSS.o $(CXXFLAGS)
+
+phatx.o: phatx.cpp
+	$(CPP) -c phatx.cpp -o phatx.o $(CXXFLAGS)
+
+player.o: player.cpp
+	$(CPP) -c player.cpp -o player.o $(CXXFLAGS)
+
+weapon.o: weapon.cpp
+	$(CPP) -c weapon.cpp -o weapon.o $(CXXFLAGS)

@@ -11,7 +11,6 @@
 	Bugs:
 		None
 */
-
 #ifndef PHAT_SS
 #define PHAT_SS
 
