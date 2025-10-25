@@ -9,10 +9,6 @@ fight function is buggy
 
 finish adding armor purchase
 
-finish showArmor function
-finish addWeapon function
-finish addArmor function
-
 split main into managable functions to help with upkeep and such.
 
 
@@ -20,7 +16,8 @@ look at player and monster class. try to seprate the file and polish it up
 
 find a better use of player.equip weapon. try to remove the numbers and add a index so we dont get invalid choices and crashes
 
-make actual weapon and armor objects memory is dirt cheap so
+polish up showArmor function
+?? make actual weapon and armor objects memory is dirt cheap so ??
 
 add more variations to enemys, stats, weapons and armor.
 Armor ^^ Cloth, cloaks, ring ( 1 max )

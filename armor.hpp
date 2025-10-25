@@ -20,7 +20,7 @@ BEGIN ARMOR
 =================================================
 */
 
-const string const_unarmorName = "Unarmored";
+const string const_unarmoredName = "Unarmored";
 const string const_paddedName = "Padded";
 const string const_leatherName = "Leather";
 const string const_hideName = "Hide";
@@ -34,7 +34,7 @@ const string const_bandedName = "Banded Splint Mail";
 const string const_halfplateName = "Half Plate Suit";
 const string const_fullplateName = "Full Plate Suit";
 
-const string const_unarmorDesc = "None";
+const string const_unarmoredDesc = "None";
 const string const_paddedDesc = "Padded quilted material, very low protection.";
 const string const_leatherDesc = "Leather armor, made from animal skins.";
 const string const_hideDesc = "Hide armor, made from lizards and tough skins.";
@@ -58,7 +58,7 @@ const sint const_paddedValue = 50;	// gp
 
 const sint const_leatherAC = 2;		// +2
 const sint const_leatherDex = 6;	// max +6 to dex checks
-const sint const_leadtherValue = 100;	// gp
+const sint const_leatherValue = 100;	// gp
 
 const sint const_hideAC = 3;		// +3
 const sint const_hideDex = 4;		// max +4 to dex checks
@@ -78,7 +78,7 @@ const sint const_chainshirtValue = 1000;// gp
 
 const sint const_chainmailAC = 5;	// +5
 const sint const_chainmailDex = 2;	// max +2 to dex checks
-const sint const_chaimailValue = 1500;	// gp
+const sint const_chainmailValue = 1500;	// gp
 
 const sint const_breastplateAC = 5;	// +5
 const sint const_breastplateDex = 3;	// max +3 to dex checks
@@ -119,12 +119,15 @@ public:
 	cArmor(sint dex = 0, sint ac = 0, sint value = 0, string name = "", string desc = "", string type = "armor") ;
 
 	virtual void clear(); // Reset all values
-						  // Accesors
-	sint getMaxDex() { return mDexMod; } sint getAC() { return mArmorClass; } sint getValue() { return mValue; } bool getEquipped() { return isEquipped; }
+						  // cArmor Accesors
+	sint getMaxDex() { return mDexMod; } sint getAC() { return mArmorClass; } bool getEquipped() { return isEquipped; }
+	void setMaxDex( sint tmp ) { mDexMod = tmp; } void setAC( sint tmp ) { mArmorClass = tmp; } 
 
-	string getName() { return mItemName; }
-	string getDesc() { return mItemDesc; }
-	string getType() { return mItemType; } // Armor
+	// cItem accessors
+	string getName() { return mItemName; }	string getDesc() { return mItemDesc; }	string getType() { return mItemType; } // Armor
+	void setName( string tmp ) { mItemName = tmp; } void setDesc( string tmp ) { mItemDesc = tmp; } void setType( string tmp = "armor") { mItemType = tmp; }	void setEquipped( bool in ) { isEquipped = in; }
+	
+	void flipEquipped() { if (isEquipped) isEquipped = false; else isEquipped = true; }
 };
 
 

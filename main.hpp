@@ -34,9 +34,9 @@ void rollDamage(sint &in, cWeapon weapon, sint strmod = 0, bool erase = true);
 void testing(); //	for new features
 
 void showWeapon(string sName, int iDice, int iDamage, int iCrit, int iCritMod, int iValue, int &iCount);
-void showArmor(string sName, string sDesc, int iAC, int iDex, int iValue, int &iCount);
+void showArmor(string sName, int iAC, int iDex, int iValue, int &iCount);
 
-void addWeapon(string sName, string sDesc, int iDice, int iDamage, int iCrit, int iCritMod, int iValue);
-void addArmor(string sName, string sDesc, int iAC, int iDex, int iValue);
+cWeapon addWeapon(string sName, string sDesc, int iDice, int iDamage, int iCrit, int iCritMod, int iValue);
+cArmor addArmor(string sName, string sDesc, int iAC, int iDex, int iValue);
 
 #endif // MAIN_H

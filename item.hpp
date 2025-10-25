@@ -21,6 +21,7 @@ public:
 	virtual void clear(); // Reset all values
 };
 
+// make potion.cpp/hpp
 class cPotion : public cItem
 {
 

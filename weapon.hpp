@@ -6,13 +6,9 @@
 
 
 */
-
 #ifndef WEAPON_HPP
 #define WEAPON_HPP
-
 #include "item.hpp"
-
-
 /*
 =================================================
 BEGIN WEAPONS
@@ -37,18 +33,18 @@ const string const_greataxeName = "Great Axe";
 const string const_greatswordName = "Great Sword";
 
 const string const_unarmedDesc = "";
-const string const_daggerDesc = "A sharp curved blade that fits perfect in a belt.";
-const string const_maceDesc = "";
-const string const_handaxeDesc = "";
-const string const_scimitarDesc = "";
-const string const_morningstarDesc = "";
-const string const_spearDesc = "";
-const string const_longswordDesc = "";
-const string const_greatclubDesc = "";
-const string const_halberdDesc = "";
-const string const_bastardswordDesc = "";
-const string const_greataxeDesc = "";
-const string const_greatswordDesc = "";
+const string const_daggerDesc = "A sharp curved blade that fits perfect in a belt";
+const string const_maceDesc = "A club with a metal ball at the end";
+const string const_handaxeDesc = "A handheld axe, very fast";
+const string const_scimitarDesc = "A viciously curved blade, very fast";
+const string const_morningstarDesc = "A club with several spikes at the end";
+const string const_spearDesc = "A long pole weapon with a sharp point";
+const string const_longswordDesc = "A straight, double-edged sword";
+const string const_greatclubDesc = "A large, heavy, two-handed weapon with spikes";
+const string const_halberdDesc = "A polearm weapon that combines an axe blade and a spear point";
+const string const_bastardswordDesc = "A hand-and-a-half sword";
+const string const_greataxeDesc = "A large, powerful axe with a double-edged head";
+const string const_greatswordDesc = "A large two-handed sword almost as tall as a person";
 
 const sint const_unarmedDamage = 3;	// damage total
 const sint const_unarmedDice = 1;	// 1d
@@ -142,8 +138,6 @@ END WEAPONS
 =================================================
 */
 
-
-
 class cWeapon : public cItem
 {
 protected:
@@ -153,28 +147,19 @@ protected:
 	sint mCritMod;
 
 	bool isEquipped; // Do i have this readied	
-
 public:
 	cWeapon(sint dmg = 0, sint dice = 0, sint crit = 0, sint critmod = 0, sint value = 0, string name = "", string desc = "", string type = "weapon");
 
 	virtual void clear(); // Reset all values
-						  // Accesors
-	sint getDamage() { return mDamage; }
-	sint getDice() { return mDice; }
-	sint getCritical() { return mCritical; }
-	sint getCritMod() { return mCritMod; }
-	sint getIsEquipped() { return isEquipped; }
+						  // Accesors for cWeapon
+	sint getDamage() { return mDamage; }	sint getDice() { return mDice; }	sint getCritical() { return mCritical; }	sint getCritMod() { return mCritMod; }	bool getIsEquipped() { return isEquipped; }
+	void setDamage(sint num) { mDamage = num; }	void setDice(sint num) { mDice = num; }	void setCritical(sint num) { mCritical = num; }	void setCritMod(sint num) { mCritMod = num; } void setEquipped( bool in ) { isEquipped = in; }
+	
+	// cItem accessors
+	string getName() { return mItemName; }	string getDesc() { return mItemDesc; }	string getType() { return mItemType; } // weapon
+	void setName(string tmp) { mItemName = tmp; }	void setDesc( string tmp) {	mItemDesc = tmp; } void setType( string tmp = "weapon") { mItemType = tmp; }
 
-
-	string getName() { return mItemName; }
-	string getDesc() { return mItemDesc; }
-	string getType() { return mItemType; } // weapon
-	void setDamage(sint num) { mDamage = num; }
-	void setDice(sint num) { mDice = num; }
-	void setCritical(sint num) { mCritical = num; }
-	void setCritMod(sint num) { mCritMod = num; }
 	void flipEquipped() { if (isEquipped) isEquipped = false; else isEquipped = true; }
-
 };
 
 #endif

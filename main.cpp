@@ -498,7 +498,57 @@ void purchase()
 
 		if (gString == "a" || gString == "A")	// Armor
 		{
+			while(!bArmorDone)
+			{
+				iCount = 1;
+				
+				// Display the armor choices
+				px.clrscr();
+				px.text("Name | AC | Dex Mod | Value");
+				px.nl();
+				/*
+					const string const_paddedName = "Padded";
+					const string const_leatherName = "Leather";
+					const string const_hideName = "Hide";
+					const string const_studdedName = "Studded Leather";
+					const string const_scaleName = "Scale";
+					const string const_chainshirtName = "Chain Shirt";
+					const string const_chainmailName = "Chain Mail";
+					const string const_breastplateName = "BreastPlate";
+					const string const_splintName = "Splint Mail";
+					const string const_bandedName = "Banded Splint Mail";
+					const string const_halfplateName = "Half Plate Suit";
+					const string const_fullplateName = "Full Plate Suit";
+				*/
+				showArmor(const_paddedName, const_paddedAC, const_paddedDex, const_paddedValue, iCount);
+				showArmor(const_leatherName, const_leatherAC, const_leatherDex, const_leatherValue, iCount);
+				showArmor(const_hideName, const_hideAC, const_hideDex, const_hideValue, iCount);
+				showArmor(const_studdedName, const_studdedAC, const_studdedDex, const_studdedValue, iCount);
+				showArmor(const_scaleName, const_scaleAC, const_scaleDex, const_scaleValue, iCount);
+				showArmor(const_chainshirtName, const_chainshirtAC, const_chainshirtDex, const_chainshirtValue, iCount);
+				showArmor(const_chainmailName, const_chainmailAC, const_chainmailDex, const_chainmailValue, iCount);
+				showArmor(const_breastplateName, const_breastplateAC, const_breastplateDex, const_breastplateValue, iCount);
+				showArmor(const_splintName, const_splintAC, const_splintDex, const_splintValue, iCount);
+				showArmor(const_bandedName, const_bandedAC, const_bandedDex, const_bandedValue, iCount);
+				showArmor(const_halfplateName, const_halfplateAC, const_halfplateDex, const_halfplateValue, iCount);
+				showArmor(const_fullplateName, const_fullplateAC, const_fullplateDex, const_fullplateValue, iCount);
+				
+				// end Armor choices
+				px.number(iCount, false);
+				px.text(". Return to previous menu");
 
+				px.getS(gString, "Choice: ");
+				px.clrscr();
+				ss.stringToNumber(gString, gInt);
+				
+				// Done
+				if (gInt == iCount) // return to purchase weapon menu
+				{
+					bArmorDone = true;
+					break;
+				}
+				
+			}
 		}
 		else if (gString == "b" || gString == "B")	// Weapon
 		{
@@ -540,7 +590,7 @@ void purchase()
 				ss.stringToNumber(gString, gInt);
 				
 				// Done
-				if (gInt == iCount) // return
+				if (gInt == iCount) // return to purchase weapon menu
 				{
 					bWeaponDone = true;
 					break;
@@ -549,37 +599,27 @@ void purchase()
 				switch (gInt)
 				{
 				case 1:
-
 					iValue = const_daggerValue;
 					if (player.getGold() >= iValue)
 					{
 						px.text("Are you sure you want to buy this Dagger for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= iValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(const_daggerValue);
-							cweapon.setCritical(const_daggerCritical);
-							cweapon.setCritMod(const_daggerCritMod);
-							cweapon.setDamage(const_daggerDamage);
-							cweapon.setDice(const_daggerDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(const_daggerValue);	cweapon.setCritical(const_daggerCritical);	cweapon.setCritMod(const_daggerCritMod);
+							cweapon.setDamage(const_daggerDamage);	cweapon.setDice(const_daggerDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-					
+				break;
 				case 2:
 					iValue = const_maceValue;
 					if (player.getGold() >= iValue)
@@ -587,30 +627,21 @@ void purchase()
 						px.text("Are you sure you want to buy this Mace for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= const_maceValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(const_maceValue);
-							cweapon.setCritical(const_maceCritical);
-							cweapon.setCritMod(const_maceCritMod);
-							cweapon.setDamage(const_maceDamage);
-							cweapon.setDice(const_maceDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(const_maceValue);	cweapon.setCritical(const_maceCritical);	cweapon.setCritMod(const_maceCritMod);
+							cweapon.setDamage(const_maceDamage);	cweapon.setDice(const_maceDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-
+				break;
 				case 3:
 					iValue = const_handaxeValue;
 					if (player.getGold() >= iValue)
@@ -618,30 +649,21 @@ void purchase()
 						px.text("Are you sure you want to buy this Handaxe for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= const_handaxeValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(const_handaxeValue);
-							cweapon.setCritical(const_handaxeCritical);
-							cweapon.setCritMod(const_handaxeCritMod);
-							cweapon.setDamage(const_handaxeDamage);
-							cweapon.setDice(const_handaxeDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(const_handaxeValue);	cweapon.setCritical(const_handaxeCritical);	cweapon.setCritMod(const_handaxeCritMod);
+							cweapon.setDamage(const_handaxeDamage);	cweapon.setDice(const_handaxeDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-					
+				break;
 				case 4:
 					iValue = const_shortswordValue;
 					if (player.getGold() >= iValue)
@@ -649,31 +671,21 @@ void purchase()
 						px.text("Are you sure you want to buy this Shortsword for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= const_shortswordValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(const_shortswordValue);
-							cweapon.setCritical(const_shortswordCritical);
-							cweapon.setCritMod(const_shortswordCritMod);
-							cweapon.setDamage(const_shortswordDamage);
-							cweapon.setDice(const_shortswordDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(const_shortswordValue);	cweapon.setCritical(const_shortswordCritical);	cweapon.setCritMod(const_shortswordCritMod);
+							cweapon.setDamage(const_shortswordDamage);	cweapon.setDice(const_shortswordDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
-					
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-						
+				break;
 				case 5:
 					iValue = const_scimitarValue;
 					if (player.getGold() >= iValue)
@@ -681,30 +693,21 @@ void purchase()
 						px.text("Are you sure you want to buy this Scimitar for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= iValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(iValue);
-							cweapon.setCritical(const_scimitarCritical);
-							cweapon.setCritMod(const_scimitarCritMod);
-							cweapon.setDamage(const_scimitarDamage);
-							cweapon.setDice(const_scimitarDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(iValue);	cweapon.setCritical(const_scimitarCritical);	cweapon.setCritMod(const_scimitarCritMod);
+							cweapon.setDamage(const_scimitarDamage);	cweapon.setDice(const_scimitarDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-						
+				break;
 				case 6:
 					iValue = const_morningstarValue;
 					if (player.getGold() >= iValue)
@@ -712,30 +715,21 @@ void purchase()
 						px.text("Are you sure you want to buy this Morningstar for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= iValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(iValue);
-							cweapon.setCritical(const_morningstarCritical);
-							cweapon.setCritMod(const_morningstarCritMod);
-							cweapon.setDamage(const_morningstarDamage);
-							cweapon.setDice(const_morningstarDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(iValue);	cweapon.setCritical(const_morningstarCritical);	cweapon.setCritMod(const_morningstarCritMod);
+							cweapon.setDamage(const_morningstarDamage);	cweapon.setDice(const_morningstarDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-					
+				break;
 				case 7:
 					iValue = const_spearValue;
 					if (player.getGold() >= iValue)
@@ -743,30 +737,21 @@ void purchase()
 						px.text("Are you sure you want to buy this Spear for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= iValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(iValue);
-							cweapon.setCritical(const_spearCritical);
-							cweapon.setCritMod(const_spearCritMod);
-							cweapon.setDamage(const_spearDamage);
-							cweapon.setDice(const_spearDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(iValue);	cweapon.setCritical(const_spearCritical);	cweapon.setCritMod(const_spearCritMod);
+							cweapon.setDamage(const_spearDamage);	cweapon.setDice(const_spearDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-
+				break;
 				case 8:
 					iValue = const_longswordValue;
 					if (player.getGold() >= iValue)
@@ -774,30 +759,21 @@ void purchase()
 						px.text("Are you sure you want to buy this Longsword for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= iValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(iValue);
-							cweapon.setCritical(const_longswordCritical);
-							cweapon.setCritMod(const_longswordCritMod);
-							cweapon.setDamage(const_longswordDamage);
-							cweapon.setDice(const_longswordDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(iValue);	cweapon.setCritical(const_longswordCritical);	cweapon.setCritMod(const_longswordCritMod);
+							cweapon.setDamage(const_longswordDamage);	cweapon.setDice(const_longswordDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-					
+				break;
 				case 9:
 					iValue = const_greatclubValue;
 					if (player.getGold() >= iValue)
@@ -805,30 +781,21 @@ void purchase()
 						px.text("Are you sure you want to buy this Greatclub for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= iValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(iValue);
-							cweapon.setCritical(const_greatclubCritical);
-							cweapon.setCritMod(const_greatclubCritMod);
-							cweapon.setDamage(const_greatclubDamage);
-							cweapon.setDice(const_greatclubDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(iValue);	cweapon.setCritical(const_greatclubCritical);	cweapon.setCritMod(const_greatclubCritMod);
+							cweapon.setDamage(const_greatclubDamage);	cweapon.setDice(const_greatclubDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-
+				break;
 				case 10:
 					iValue = const_halberdValue;
 					if (player.getGold() >= iValue)
@@ -836,21 +803,14 @@ void purchase()
 						px.text("Are you sure you want to buy this Halberd for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= iValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(iValue);
-							cweapon.setCritical(const_halberdCritical);
-							cweapon.setCritMod(const_halberdCritMod);
-							cweapon.setDamage(const_halberdDamage);
-							cweapon.setDice(const_halberdDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(iValue);	cweapon.setCritical(const_halberdCritical);	cweapon.setCritMod(const_halberdCritMod);
+							cweapon.setDamage(const_halberdDamage);	cweapon.setDice(const_halberdDice);
 							player.addWeapon(cweapon);
-
+							
 							bWeaponDone = true;
 							break;
 						}
@@ -859,7 +819,7 @@ void purchase()
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-
+				break;
 				case 11:
 					iValue = const_bastardswordValue;
 					if (player.getGold() >= iValue)
@@ -867,30 +827,20 @@ void purchase()
 						px.text("Are you sure you want to buy this Bastard Sword for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= iValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(iValue);
-							cweapon.setCritical(const_bastardswordCritical);
-							cweapon.setCritMod(const_bastardswordCritMod);
-							cweapon.setDamage(const_bastardswordDamage);
-							cweapon.setDice(const_bastardswordDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);cweapon.setValue(iValue);	cweapon.setCritical(const_bastardswordCritical);	cweapon.setCritMod(const_bastardswordCritMod);
+							cweapon.setDamage(const_bastardswordDamage);	cweapon.setDice(const_bastardswordDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-
+				break;
 				case 12:
 					iValue = const_greataxeValue;
 					if (player.getGold() >= iValue)
@@ -898,30 +848,21 @@ void purchase()
 						px.text("Are you sure you want to buy this Greataxe for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= iValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(iValue);
-							cweapon.setCritical(const_greataxeCritical);
-							cweapon.setCritMod(const_greataxeCritMod);
-							cweapon.setDamage(const_greataxeDamage);
-							cweapon.setDice(const_greataxeDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(iValue);	cweapon.setCritical(const_greataxeCritical);	cweapon.setCritMod(const_greataxeCritMod);
+							cweapon.setDamage(const_greataxeDamage);	cweapon.setDice(const_greataxeDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-					
+				break;
 				case 13:
 					iValue = const_greatswordValue;
 					if (player.getGold() >= iValue)
@@ -929,30 +870,21 @@ void purchase()
 						px.text("Are you sure you want to buy this Greatsword for ", false);
 						px.number(iValue, false);
 						px.getS(gString, "gp? Y or N ");
-
 						if (gString == "y" || gString == "Y")
 						{
-							gShort = player.getGold();
-							gShort -= iValue;
-							player.setGold(gShort);
-
-							cweapon.setValue(iValue);
-							cweapon.setCritical(const_greatswordCritical);
-							cweapon.setCritMod(const_greatswordCritMod);
-							cweapon.setDamage(const_greatswordDamage);
-							cweapon.setDice(const_greatswordDice);
-
+							// Get, deduct and set gold
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setValue(iValue);	cweapon.setCritical(const_greatswordCritical);	cweapon.setCritMod(const_greatswordCritMod);
+							cweapon.setDamage(const_greatswordDamage);	cweapon.setDice(const_greatswordDice);
 							player.addWeapon(cweapon);
 
-							bWeaponDone = true;
-							break;
+							bWeaponDone = true;	break;
 						}
-						else
-							break;
+						else	break;
 					}
 					else
 						px.pause("You don't have enough gold for that.");
-					
+				break;
 				default:
 					px.pause("Invalid choice.");
 					break;
@@ -1437,18 +1369,65 @@ void showWeapon(string sName, int iDice, int iDamage, int iCrit, int iCritMod, i
 }
 
 // Armor display when buying
-void showArmor(string sName, string sDesc, int iAC, int iDex, int iValue, int &iCount)
+// Armor name, AC, Dex Max, Value, running count for display purposes
+void showArmor(string sName, int iAC, int iDex, int iValue, int &iCount)
 {
-
+	px.number(iCount, false);
+	px.text(". ",false);
+	px.text(sName, false);
+	px.text(" ",false);	// Add a space
+	px.text("AC ",false);
+	px.number(iAC, false);
+	px.text(" Dex Max ", false);
+	px.number(iDex, false);
+	px.text(" Value ", false);
+	px.number(iValue, false);
+	px.text("gp");
+	
+	iCount++;
 }
 
 // use to add weapons in batches
+/*
+	
+	sint mDamage;
+	sint mDice;
+	sint mCritical;
+	sint mCritMod;
 
-void addWeapon(string sName, string sDesc, int iDice, int iDamage, int iCrit, int iCritMod, int iValue)
+	bool isEquipped; // Do i have this readied	
+	string mItemName; // Basic name for display
+	string mItemDesc; // When asked for details this is the output
+	string mItemType; // Weapon, Armor, Potion
+
+	sint mValue; // How much gold is this worth
+*/
+cWeapon addWeapon(string sName, string sDesc, int iDice, int iDamage, int iCrit, int iCritMod, int iValue)
 {
+	cWeapon tmp;	tmp.clear();
+	tmp.setName(sName); tmp.setDesc(sDesc);	tmp.setDice(iDice);	tmp.setDamage(iDamage); tmp.setCritical(iCrit); tmp.setCritMod(iCritMod); tmp.setValue(iValue);
+	tmp.setType(); // weapon default
+	tmp.setEquipped(false);
+	return tmp;
 }
 
 // use to add armor in batches
-void addArmor(string sName, string sDesc, int iAC, int iDex, int iValue)
+/*
+	sint mDexMod;
+	sint mArmorClass;
+	bool isEquipped; // Am i wearing this?
+
+	string mItemName; // Basic name for display
+	string mItemDesc; // When asked for details this is the output
+	string mItemType; // Weapon, Armor, Potion
+
+	sint mValue; // How much gold is this worth
+*/
+cArmor addArmor(string sName, string sDesc, int iAC, int iDex, int iValue)
 {
+	cArmor tmp;		tmp.clear();
+	tmp.setName(sName);	tmp.setDesc(sDesc);	tmp.setAC(iAC);	tmp.setMaxDex(iDex);	tmp.setValue(iValue);
+	tmp.setType();	// armor default
+	tmp.setEquipped(false);
+	return tmp;
 }
