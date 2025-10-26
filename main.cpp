@@ -913,8 +913,11 @@ void fight()
 	cMonster enemy;
 	cWeapon cweapon;
 
+	bool bFightOver = false;
+	bool bQuit = false;
 	int tmp;
 	sint xpCalc;
+	sint goldCalc;
 	sint iArmorClass;
 
 	sint iInitiative, eInitiative;
@@ -925,25 +928,16 @@ void fight()
 
 	sint eHP, eAC, eAP, eGold, eXP;
 	sint iDexMod, iStrMod;
+	string eName, eWeaponName;
 
-	bool bFightOver = false;
-	bool bQuit = false;
 
 	// Setup static stuff
 	iStrMod = (player.getLevel() + player.getMod(player.getStrength()));
 	iDexMod = (player.getLevel() + player.getMod(player.getDexterity()));
-
+	player.getWeapon(cweapon);
 
 	// player AC
-	gShort = player.getArmor();
-	gShort += iDexMod;
-	iArmorClass = gShort;
-
-
-
-	string eName, eWeaponName;
-
-	player.getWeapon(cweapon);
+	gShort = player.getArmor();	gShort += iDexMod;	iArmorClass = gShort;
 
 	if (player.mCreated == false) // no player
 	{
@@ -961,93 +955,27 @@ void fight()
 			px.text(". Fight level ", false);
 			px.number(gInt);
 		}
-
 		px.number(gInt, false);
 		px.text(". Leave arena");
-
 		px.getS(gString, "Please make a choice: ");
 
 		ss.stringToNumber(gString, tmp);
-
 		bFightOver = false; // make sure you can fight
 
-
 		// check for a quit selection
-		if (tmp == gInt)
-		{
-			// quit
+		if (tmp == gInt){
 			px.getS(gString, "Are you sure you want to leave the arena? Y or N ");
-
-			if (gString == "y" || gString == "Y")
-				break;
+			if (gString == "y" || gString == "Y")	{	bQuit = true; bFightOver = true;	break;	}	
 		}
-
+		
+		if (tmp > (player.getLevel() + 1))	{	px.pause("Invalid choice.");	break;	}
 		while (!bFightOver)
 		{
+			xpCalc = fightXPDowngrade(tmp, player.getLevel());
+			goldCalc = fightGoldDowngrade(tmp, player.getLevel());
 
-			// add one to exit
-			if (tmp > (player.getLevel() + 1))
-			{
-				px.pause("Invalid choice.");
-				break;
-			}
-
-			xpCalc = tmp;
-			// Xp downgrade
-			if (xpCalc == player.getLevel())
-				xpCalc = 150;
-			else if (xpCalc == (player.getLevel() - 1))
-				xpCalc = 100;
-			else if (xpCalc == (player.getLevel() - 2))
-				xpCalc = 75;
-			else if (xpCalc == (player.getLevel() - 3))
-				xpCalc = 50;
-			else if (xpCalc == (player.getLevel() - 4))
-				xpCalc = 25;
-			else
-				xpCalc = 5;
-
-			// Gold downgrade
-			gInt = tmp;
-			if (gInt == player.getLevel())
-				gInt = 300;
-			else if (gInt == (player.getLevel() - 1))
-				gInt = 150;
-			else if (gInt == (player.getLevel() - 2))
-				gInt = 100;
-			else if (gInt == (player.getLevel() - 3))
-				gInt = 50;
-			else if (gInt == (player.getLevel() - 4))
-				gInt = 25;
-			else
-				gInt = 5;
-
-			// extra random dont forget to change me when you add more enemies.
-			for(int i = 0; i < 25; i++)
-				px.rng(tmp, 5, 5);
-			switch (tmp)
-			{
-			case 1:
-				enemy.createEnemy("Orc", "Longsword", 20, 12, xpCalc, 3, 12, gInt);
-				break;
-			case 2:
-				enemy.createEnemy("Orc", "Falchion", 35, 13, xpCalc, 5, 15, gInt);
-				break;
-			case 3:
-				enemy.createEnemy("Orc", "Scimitar", 60, 14, xpCalc, 7, 18, gInt);
-				break;
-			case 4:
-				enemy.createEnemy("Orc", "Broadsword", 85, 15, xpCalc, 9, 21, gInt);
-				break;
-			case 5:
-				enemy.createEnemy("Orc", "Waraxe", 100, 16, xpCalc, 11, 24, gInt);
-				break;
-			default:
-				px.pause("Invalid choice.");
-				bFightOver = true;
-				break;
-			}
-
+			fightEnemyRNG(enemy, xpCalc, goldCalc);
+		
 			if (bFightOver)
 				break;
 
@@ -1067,19 +995,14 @@ void fight()
 			px.rng(iAttackRoll);
 			px.rng(eAttackRoll);
 
-			px.rng(iDamageRoll);
-			px.rng(eDamageRoll);
-
-
 			// add dex mod to player initiative roll
 			iInitiative += iDexMod;
 
 			// attack roll
 			iAttackRoll += iStrMod;
-
 			
 			rollDamage(iDamageRoll, cweapon, iStrMod);
-			px.rng(eDamageRoll, enemy.getAttack(), enemy.getAttack());
+			px.rng(eDamageRoll, enemy.getAttack(), enemy.getAttack()-1);
 
 			px.clrscr();
 			px.text("Round ", false);
@@ -1093,6 +1016,7 @@ void fight()
 			px.number(player.getHealth(), false);
 			px.text("hp remaining");
 
+			px.sleep(5000);
 			// Initiative hit
 			// player first
 			if (iInitiative >= eInitiative)
@@ -1191,8 +1115,7 @@ void fight()
 
 				iAttackRoll += iStrMod;
 
-				rollDamage(iDamageRoll, cweapon, iStrMod);
-				px.rng(eDamageRoll, enemy.getAttack(), enemy.getAttack());
+				px.rng(eDamageRoll, enemy.getAttack(), enemy.getAttack()+1);
 
 				// Round # (Player vs. enemy)
 				// hp remaining: #
@@ -1325,6 +1248,67 @@ void equip()
 
 }
 
+sint fightXPDowngrade(int tmp, sint level)
+{	
+	sint xpCalc;
+	if (tmp == level)
+		xpCalc = 150;
+	else if (tmp == (level - 1))
+		xpCalc = 100;
+	else if (tmp == (level - 2))
+		xpCalc = 75;
+	else if (tmp == (level - 3))
+		xpCalc = 50;
+	else if (tmp == (level - 4))
+		xpCalc = 25;
+	else
+		xpCalc = 5;
+	return xpCalc;
+}
+
+sint fightGoldDowngrade(int tmp, sint level)
+{
+	sint goldCalc;
+	if (tmp == level)
+		goldCalc = 300;
+	else if (tmp == (level - 1))
+		goldCalc = 150;
+	else if (tmp == (level - 2))
+		goldCalc = 100;
+	else if (tmp == (level - 3))
+		goldCalc = 50;
+	else if (tmp == (level - 4))
+		goldCalc = 25;
+	else
+		goldCalc = 5;
+	return goldCalc;
+}
+
+void fightEnemyRNG(cMonster &in, sint xp, sint gold)
+{
+	// extra random dont forget to change me when you add more enemies.
+	for(int i = 0; i < 25; i++)
+		px.rng(gInt, 1, 5);
+		
+	switch (gInt)
+	{
+	case 1:
+		in.createEnemy("Orc", "Longsword", 20, 12, xp, 3, 12, gold);
+		break;
+	case 2:
+		in.createEnemy("Orc", "Falchion", 35, 13, xp, 5, 15, gold);
+		break;
+	case 3:
+		in.createEnemy("Orc", "Scimitar", 60, 14, xp, 7, 18, gold);
+		break;
+	case 4:
+		in.createEnemy("Orc", "Broadsword", 85, 15, xp, 9, 21, gold);
+		break;
+	case 5:
+		in.createEnemy("Orc", "Waraxe", 100, 16, xp, 11, 24, gold);
+		break;
+	}
+}
 void rollDamage(sint &in, cWeapon weapon, sint strmod, bool erase)
 {
 	if (erase)
@@ -1332,7 +1316,7 @@ void rollDamage(sint &in, cWeapon weapon, sint strmod, bool erase)
 
 	for (int i = 0; i < weapon.getDice(); i++)
 	{
-		px.rng(gInt, weapon.getDamage(), weapon.getDamage());
+		px.rng(gInt, weapon.getDamage(), weapon.getDamage()-1);
 		in += gInt;
 	}
 	in += strmod;

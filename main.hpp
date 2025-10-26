@@ -29,6 +29,10 @@ void purchase();	// purchase armor and weapons
 void fight();		// fight enemies
 void equip();		// equip stuff
 
+
+sint fightXPDowngrade(int tmp, sint level);
+sint fightGoldDowngrade(int tmp, sint level);
+void fightEnemyRNG(cMonster &in, sint xp, sint gold);
 void rollDamage(sint &in, cWeapon weapon, sint strmod = 0, bool erase = true);
 
 void testing(); //	for new features

@@ -5,7 +5,10 @@ finish armor and weapon inventory ( add functionality to it, base is half assed 
 add weapon desc as const strings
 ^^ Add these when purchasing
 
-fight function is buggy
+fight function is buggy as fukkkk, 
+redo RNG calculations?? 
+Get weapon from inventory/opt to equip from inventory first
+Check player HP and kill him if needed
 
 finish adding armor purchase
 

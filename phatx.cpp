@@ -11,14 +11,15 @@ pxWindow::~pxWindow()
 
 void pxWindow::rng(int &iNum, int iMin, int iMax)
 {
-	mInt = ( rand() % ( iMax - iMin ) + iMin ); // rand() 20 - 1 + 1
+	if( (iMax-iMin) != 0 )	mInt = ( rand() % ( iMax - iMin ) + 1 ); // rand() 20 - 1 + 1
+	else	mInt = 1000; // for error checking of bad input ? ( equals 1000 always )
 	iNum = mInt;
 }
 
 void pxWindow::rng(sint &sNum, sint sMin, sint sMax)
 {
-	if (sMin > 0)	mShort = (rand() % ( sMax - sMin) + sMin );
-	else			mShort = (rand() % 1) + 1;	// for error checking of bad input ? ( equals 1 always )
+	if( (sMax-sMin) != 0 )	mShort = (rand() % ( sMax - sMin) + 1 );
+	else	mShort = 1000;	// for error checking of bad input ? ( equals 1000 always )
 	sNum = mShort;
 }
 
