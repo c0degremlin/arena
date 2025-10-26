@@ -508,20 +508,7 @@ void purchase()
 				px.clrscr();
 				px.text("Name | AC | Dex Mod | Value");
 				px.nl();
-				/*
-					const string const_paddedName = "Padded";
-					const string const_leatherName = "Leather";
-					const string const_hideName = "Hide";
-					const string const_studdedName = "Studded Leather";
-					const string const_scaleName = "Scale";
-					const string const_chainshirtName = "Chain Shirt";
-					const string const_chainmailName = "Chain Mail";
-					const string const_breastplateName = "BreastPlate";
-					const string const_splintName = "Splint Mail";
-					const string const_bandedName = "Banded Splint Mail";
-					const string const_halfplateName = "Half Plate Suit";
-					const string const_fullplateName = "Full Plate Suit";
-				*/
+				
 				showArmor(const_paddedName, const_paddedAC, const_paddedDex, const_paddedValue, iCount);
 				showArmor(const_leatherName, const_leatherAC, const_leatherDex, const_leatherValue, iCount);
 				showArmor(const_hideName, const_hideAC, const_hideDex, const_hideValue, iCount);
@@ -549,7 +536,98 @@ void purchase()
 					bArmorDone = true;
 					break;
 				}
-				
+				switch(gInt)
+				{
+					// 		showArmor(const_paddedName, const_paddedAC, const_paddedDex, const_paddedValue, iCount);
+					case 1:
+						iValue = const_paddedValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Padded Armor for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_paddedName); carmor.setDesc(const_paddedDesc).setAC(const_paddedAC);	
+								carmor.setMaxDex(const_paddedDex); carmor.setValue(const_paddedValue);
+								carmor.setType();
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
+					break;
+					//		showArmor(const_leatherName, const_leatherAC, const_leatherDex, const_leatherValue, iCount);
+					case 2:
+						iValue = const_leatherValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Padded Armor for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_leatherName); carmor.setAC(const_leatherAC);	carmor.setMaxDex(const_leatherDex); carmor.setValue(const_leatherValue);
+								carmor.setType();
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
+					break;
+					//		showArmor(const_hideName, const_hideAC, const_hideDex, const_hideValue, iCount);
+					case 3:
+						
+					break;
+					//		showArmor(const_studdedName, const_studdedAC, const_studdedDex, const_studdedValue, iCount);
+					case 4:
+						
+					break;
+					//		showArmor(const_scaleName, const_scaleAC, const_scaleDex, const_scaleValue, iCount);
+					case 5:
+						
+					break;
+					//		showArmor(const_chainshirtName, const_chainshirtAC, const_chainshirtDex, const_chainshirtValue, iCount);
+					case 6:
+						
+					break;
+					//		showArmor(const_chainmailName, const_chainmailAC, const_chainmailDex, const_chainmailValue, iCount);
+					case 7:
+					
+					break;
+					//		showArmor(const_breastplateName, const_breastplateAC, const_breastplateDex, const_breastplateValue, iCount);
+					case 8:
+						
+					break;
+					//		showArmor(const_splintName, const_splintAC, const_splintDex, const_splintValue, iCount);
+					case 9:
+						
+					break;
+					//		showArmor(const_bandedName, const_bandedAC, const_bandedDex, const_bandedValue, iCount);
+					case 10:
+						
+					break;
+					//		showArmor(const_halfplateName, const_halfplateAC, const_halfplateDex, const_halfplateValue, iCount);
+					case 11:
+						
+					break;
+					//		showArmor(const_fullplateName, const_fullplateAC, const_fullplateDex, const_fullplateValue, iCount);
+					case 12:
+						
+					break;
+				}
 			}
 		}
 		else if (gString == "b" || gString == "B")	// Weapon
@@ -585,9 +663,7 @@ void purchase()
 
 				px.getS(gString, "Choice: ");
 
-
 				px.clrscr();
-
 
 				ss.stringToNumber(gString, gInt);
 				
@@ -952,7 +1028,7 @@ void fight()
 	player.getWeapon(cweapon);
 
 	// player AC
-	gShort = player.getArmor();	gShort += iDexMod;	iArmorClass = gShort;
+	gShort = player.getArmorClass();	gShort += iDexMod;	iArmorClass = gShort;
 
 	if (player.mCreated == false) // no player
 	{
@@ -995,7 +1071,7 @@ void fight()
 				break;
 
 			eHP = enemy.getHealth();
-			eAC = enemy.getArmor();
+			eAC = enemy.getArmorClass();
 			eAP = enemy.getAP();
 			eGold = enemy.getGold();
 			eXP = enemy.getExperience();

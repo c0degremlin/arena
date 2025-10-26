@@ -69,7 +69,7 @@ public:
 	const string getName() { return mName; }
 	const string getWeaponName() { return mEquippedWeaponName; }
 	const sint getHealth() { return mHealth; }
-	const  sint getArmor() { return mArmor; }
+	const  sint getArmorClass() { return mArmor; }
 	const sint getGold() { return mGold; }
 	const sint getAttack() { return mAttack; }
 	const sint getAP() { return mAP; }
@@ -81,7 +81,7 @@ public:
 	void setName(string tmp) { mName = tmp; }
 	void setWeaponName(string tmp) { mEquippedWeaponName = tmp; }
 	void setHealth(sint iNum = 0) { if (iNum >= 0) mHealth = iNum; }
-	void setArmor(sint iNum = 0) { if (iNum >= 0) mArmor = iNum; }
+	void setArmorClass(sint iNum = 0) { if (iNum >= 0) mArmor = iNum; }
 	void setGold(sint iNum = 0) { if (iNum >= 0) mGold = iNum; }
 	void setAttack(sint iNum = 0) { if (iNum >= 0) mAttack = iNum; }
 	void setAP(sint iNum = 0) { if (iNum >= 0) mAP = iNum; }
@@ -105,8 +105,9 @@ private:
 	cArmor mArmor;
 
 	string mEquippedWeaponDesc;
+	
 	string mEquippedArmorName;
-	string mEquipedArmorDesc;
+	string mEquippedArmorDesc;
 
 	string mClassName; // Certain class use certain weapons
 
@@ -140,6 +141,11 @@ public:
 	void delWeapon(int number = 0);
 	void equipWeapon(int number = 0);
 	void getWeapon(cWeapon &item, int number = 0);
+	
+	void addArmor(cArmor item, int number = 0);
+	void delArmor(int number = 0);
+	void equipArmor(int number = 0);
+	void getArmor(cArmor &item, int number = 0);
 
 
 	void showInventory();
@@ -147,7 +153,7 @@ public:
 
 	// Accessors
 	const string getWeaponDesc() { return mEquippedWeaponDesc; } const string getArmorName() { return mEquippedArmorName; }
-	const string getArmorDesc() { return mEquipedArmorDesc; } const string getClass() { return mClassName; }
+	const string getArmorDesc() { return mEquippedArmorDesc; } const string getClass() { return mClassName; }
 	const int getMaxHealth() { return mMaxHealth; } const int getMana() { return mMana; } const int getMaxMana() { return mMaxMana; }
 	const int getMaxAP() { return mMaxAP; }	 const int getStrength() { return mStrength; } const int getDexterity() { return mDexterity; }
 	const int getConstitution() { return mConstitution; } const int getIntelligence() { return mIntelligence; } const int getWisdom() { return mWisdom; }
@@ -155,7 +161,7 @@ public:
 	const int getLevel() { return mLevel; } 
 
 	void setWeaponDesc(string tmp) { mEquippedWeaponDesc = tmp; }
-	void setArmorName(string tmp) { mEquippedArmorName = tmp; } void setArmorDesc(string tmp) { mEquipedArmorDesc = tmp; }
+	void setArmorName(string tmp) { mEquippedArmorName = tmp; } void setArmorDesc(string tmp) { mEquippedArmorDesc = tmp; }
 	void setClass(string tmp) { mClassName = tmp; } void setMaxHealth(int tmp) { if (tmp > 0 && tmp >= mHealth) mMaxHealth = tmp; }
 	void setMana(int tmp) { if (tmp > 0) mMana = tmp; } void setMaxMana(int tmp) { if (tmp > 0 && tmp >= mMana) mMaxMana = tmp; }
 	void setMaxAP(int tmp) { if (tmp > 0 && tmp >= mAP) mMaxAP = tmp; } void setStrength(int tmp) { if (tmp > 7) mStrength = tmp; }

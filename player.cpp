@@ -9,7 +9,7 @@ cMonster::cMonster()
 cMonster::cMonster(sint iHealth, sint iArmor, sint iGold, sint iAttack, sint iAP, sint iXP, bool iCanRun)
 {
 	// use functions for cleaner error checking such as 0 health, 0 attack, 0 armor
-	setHealth(iHealth); setArmor(iArmor); setGold(iGold); setAttack(iAttack); setAP(iAP); setExperience(iXP);
+	setHealth(iHealth); setArmorClass(iArmor); setGold(iGold); setAttack(iAttack); setAP(iAP); setExperience(iXP);
 
 	monsterCanRun = iCanRun; gNumOfMonsters += 1;
 }
@@ -50,7 +50,7 @@ cPlayer::cPlayer()
 	mEquippedWeaponName = "Unarmed";
 	mEquippedWeaponDesc = "Bashing with the use of bare knuckles!";
 	mEquippedArmorName = "Unarmored";
-	mEquipedArmorDesc = "Bare flesh and cloth loins";
+	mEquippedArmorDesc = "Bare flesh and cloth loins";
 	mClassName = "Farmer";
 
 	mIsDead = false;
@@ -89,8 +89,6 @@ void cPlayer::addAP(sint num)
 
 void cPlayer::addWeapon(cWeapon item, int number)
 {
-	string type = item.getType();
-
 	if (number == 0)	// default add to top of the stack
 		mWeaponInventory.push_back(item);
 	else			// replace specfic item
@@ -126,6 +124,44 @@ void cPlayer::equipWeapon(int number)
 void cPlayer::getWeapon(cWeapon &item, int number)
 {
 	item = mWeaponInventory.at(number);
+}
+
+void cPlayer::addArmor(cArmor item, int number)
+{
+	if (number == 0)	// default add to top of the stack
+		mArmorInventory.push_back(item);
+	else			// replace specfic item
+		mArmorInventory.at(number) = item;
+}
+
+void cPlayer::delArmor(int number)
+{
+	if (number == 0)	// default remove from top of the stack
+		mArmorInventory.pop_back();
+	else			// replace specfic item
+		mArmorInventory.erase(mArmorInventory.begin(), mArmorInventory.begin() + number);
+}
+
+void cPlayer::equipArmor(int number)
+{
+	if (mArmor.getEquipped())
+	{
+		px.text(mArmor.getName(), false);
+		px.text(" is already equipped...");
+		px.pause();
+	}
+	else
+	{
+		mArmor = mArmorInventory.at(number);
+		mEquippedArmorName = mArmor.getName();
+		mEquippedArmorDesc = mArmor.getDesc();
+		mArmor.flipEquipped();
+	}
+}
+
+void cPlayer::getArmor(cArmor &item, int number)
+{
+	item = mArmorInventory.at(number);
 }
 
 void cPlayer::level()

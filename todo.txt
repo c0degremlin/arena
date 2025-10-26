@@ -13,13 +13,12 @@ redo RNG calculations??
 Get weapon from inventory/opt to equip from inventory first ? Done ?
 Check player HP and kill him if needed ? Done ?
 
-finish adding armor purchase
+finish adding armor purchase // not adding name or description right, might need to look at showstats menu cuz debug isnt showing issue
 
 finish main.cpp equip function
 
 find a better use of player.equip weapon. try to remove the numbers and add a index so we dont get invalid choices and crashes
 finish equipWeapon // not checking stuff, add more functions/break down more
-Add add,del,get and equip armor functions
 
 split main into managable functions to help with upkeep and such.
 
