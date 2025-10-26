@@ -11,9 +11,11 @@ void testing()
 	cWeapon tmp(const_daggerDamage, const_daggerDice, const_daggerCritical,
 		const_daggerCritMod, const_daggerValue, const_daggerName, const_daggerDesc, "weapon");
 	player.addWeapon(tmp);
+	player.equipWeapon();
 	player.setName("Faldor"); player.setStrength(15); player.setDexterity(15); player.setConstitution(15); player.setIntelligence(15);
 	player.setWisdom(15); player.setCharisma(15);
-	player.mCreated = true; player.setLevel(2);
+	player.mCreated = true; player.setLevel(1);
+	player.setGold(5000);	// extra gold for purchases
 
 	player.calcHPandMP();
 
@@ -612,6 +614,7 @@ void purchase()
 							cweapon.setValue(const_daggerValue);	cweapon.setCritical(const_daggerCritical);	cweapon.setCritMod(const_daggerCritMod);
 							cweapon.setDamage(const_daggerDamage);	cweapon.setDice(const_daggerDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -634,6 +637,7 @@ void purchase()
 							cweapon.setValue(const_maceValue);	cweapon.setCritical(const_maceCritical);	cweapon.setCritMod(const_maceCritMod);
 							cweapon.setDamage(const_maceDamage);	cweapon.setDice(const_maceDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -656,6 +660,7 @@ void purchase()
 							cweapon.setValue(const_handaxeValue);	cweapon.setCritical(const_handaxeCritical);	cweapon.setCritMod(const_handaxeCritMod);
 							cweapon.setDamage(const_handaxeDamage);	cweapon.setDice(const_handaxeDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -678,6 +683,7 @@ void purchase()
 							cweapon.setValue(const_shortswordValue);	cweapon.setCritical(const_shortswordCritical);	cweapon.setCritMod(const_shortswordCritMod);
 							cweapon.setDamage(const_shortswordDamage);	cweapon.setDice(const_shortswordDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -700,6 +706,7 @@ void purchase()
 							cweapon.setValue(iValue);	cweapon.setCritical(const_scimitarCritical);	cweapon.setCritMod(const_scimitarCritMod);
 							cweapon.setDamage(const_scimitarDamage);	cweapon.setDice(const_scimitarDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -722,6 +729,7 @@ void purchase()
 							cweapon.setValue(iValue);	cweapon.setCritical(const_morningstarCritical);	cweapon.setCritMod(const_morningstarCritMod);
 							cweapon.setDamage(const_morningstarDamage);	cweapon.setDice(const_morningstarDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -744,6 +752,7 @@ void purchase()
 							cweapon.setValue(iValue);	cweapon.setCritical(const_spearCritical);	cweapon.setCritMod(const_spearCritMod);
 							cweapon.setDamage(const_spearDamage);	cweapon.setDice(const_spearDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -766,6 +775,7 @@ void purchase()
 							cweapon.setValue(iValue);	cweapon.setCritical(const_longswordCritical);	cweapon.setCritMod(const_longswordCritMod);
 							cweapon.setDamage(const_longswordDamage);	cweapon.setDice(const_longswordDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -788,6 +798,7 @@ void purchase()
 							cweapon.setValue(iValue);	cweapon.setCritical(const_greatclubCritical);	cweapon.setCritMod(const_greatclubCritMod);
 							cweapon.setDamage(const_greatclubDamage);	cweapon.setDice(const_greatclubDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -810,6 +821,7 @@ void purchase()
 							cweapon.setValue(iValue);	cweapon.setCritical(const_halberdCritical);	cweapon.setCritMod(const_halberdCritMod);
 							cweapon.setDamage(const_halberdDamage);	cweapon.setDice(const_halberdDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 							
 							bWeaponDone = true;
 							break;
@@ -833,6 +845,7 @@ void purchase()
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);cweapon.setValue(iValue);	cweapon.setCritical(const_bastardswordCritical);	cweapon.setCritMod(const_bastardswordCritMod);
 							cweapon.setDamage(const_bastardswordDamage);	cweapon.setDice(const_bastardswordDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -855,6 +868,7 @@ void purchase()
 							cweapon.setValue(iValue);	cweapon.setCritical(const_greataxeCritical);	cweapon.setCritMod(const_greataxeCritMod);
 							cweapon.setDamage(const_greataxeDamage);	cweapon.setDice(const_greataxeDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -877,6 +891,7 @@ void purchase()
 							cweapon.setValue(iValue);	cweapon.setCritical(const_greatswordCritical);	cweapon.setCritMod(const_greatswordCritMod);
 							cweapon.setDamage(const_greatswordDamage);	cweapon.setDice(const_greatswordDice);
 							player.addWeapon(cweapon);
+							player.equipWeapon();
 
 							bWeaponDone = true;	break;
 						}
@@ -968,7 +983,7 @@ void fight()
 			if (gString == "y" || gString == "Y")	{	bQuit = true; bFightOver = true;	break;	}	
 		}
 		
-		if (tmp > (player.getLevel() + 1))	{	px.pause("Invalid choice.");	break;	}
+		if (tmp > (player.getLevel() + 1))	{	px.pause("Invalid choice.");	}
 		while (!bFightOver)
 		{
 			xpCalc = fightXPDowngrade(tmp, player.getLevel());
@@ -1245,13 +1260,47 @@ void fight()
 // show inventory and equipped weapons
 void equip()
 {
-
+	bool bEquipDone = false;
+	bool bArmorDone = false;
+	bool bWeaponDone = false;
+	
+	int iMenuCount = 1;
+	sint iWeaponValue = 0;
+	sint iArmorValue = 0;
+	
+	cWeapon cweapon;
+	cArmor carmor;
+	
+	while(!bEquipDone)
+	{
+		px.text("==============================");
+		px.text("Equip Menu");
+		px.text("==============================");
+		px.nl(1);
+		px.text("A. Equip Armor");
+		px.text("W. Equip Weapons");
+		px.text("R. Return to prev menu");
+		px.getS(gString, "Choice: ");
+	
+		if(gString == "a" || gString == "A")		// Armor
+		{
+		}
+		else if (gString == "w" || gString == "W")	// Weapon
+		{
+		}
+		else if(gString == "r" || gString == "R")
+			bEquipDone=true;
+		else
+		px.pause("Invalid choice.");
+	}
 }
 
 sint fightXPDowngrade(int tmp, sint level)
 {	
 	sint xpCalc;
-	if (tmp == level)
+	if (tmp > level )	// Double xp
+		xpCalc = 300;
+	else if (tmp == level)
 		xpCalc = 150;
 	else if (tmp == (level - 1))
 		xpCalc = 100;
@@ -1269,7 +1318,9 @@ sint fightXPDowngrade(int tmp, sint level)
 sint fightGoldDowngrade(int tmp, sint level)
 {
 	sint goldCalc;
-	if (tmp == level)
+	if (tmp > level)	// 1.5x gold
+		goldCalc = 450;
+	else if (tmp == level)
 		goldCalc = 300;
 	else if (tmp == (level - 1))
 		goldCalc = 150;

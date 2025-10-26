@@ -6,18 +6,25 @@ add weapon desc as const strings
 ^^ Add these when purchasing
 
 fight function is buggy as fukkkk, 
+orc always hits?
+add options to heal?
+dont lose xp or gold or equipped weapons/armor when dying.
 redo RNG calculations?? 
-Get weapon from inventory/opt to equip from inventory first
-Check player HP and kill him if needed
+Get weapon from inventory/opt to equip from inventory first ? Done ?
+Check player HP and kill him if needed ? Done ?
 
 finish adding armor purchase
+
+finish main.cpp equip function
+
+find a better use of player.equip weapon. try to remove the numbers and add a index so we dont get invalid choices and crashes
+finish equipWeapon // not checking stuff, add more functions/break down more
+Add add,del,get and equip armor functions
 
 split main into managable functions to help with upkeep and such.
 
 
 look at player and monster class. try to seprate the file and polish it up
-
-find a better use of player.equip weapon. try to remove the numbers and add a index so we dont get invalid choices and crashes
 
 polish up showArmor function
 ?? make actual weapon and armor objects memory is dirt cheap so ??
