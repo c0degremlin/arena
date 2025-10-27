@@ -550,7 +550,8 @@ void purchase()
 							{
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
-								carmor.setName(const_paddedName); carmor.setDesc(const_paddedDesc).setAC(const_paddedAC);	
+								carmor.setName(const_paddedName); carmor.setDesc(const_paddedDesc);
+								carmor.setAC(const_paddedAC);	
 								carmor.setMaxDex(const_paddedDex); carmor.setValue(const_paddedValue);
 								carmor.setType();
 								player.addArmor(carmor);

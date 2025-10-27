@@ -20,6 +20,7 @@ Assume user is your grandma and "She didn't know what happened it was there and 
 #define _PHAT_SS_H
 
 #include <stdlib.h>
+#include <climits>
 #include <time.h>
 #include <iostream>
 using std::cin;
