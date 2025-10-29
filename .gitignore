@@ -4,6 +4,7 @@ arena.vcxproj
 .vs/arena/v15/.suo
 .vs/arena/v15/Browse.VC.db
 .vs/arena/v15/Browse.VC.opendb
+.vscode
 arena.sdf
 Debug/arena.Build.CppClean.log
 *.exe
@@ -19,4 +20,6 @@ Debug/arena.tlog/link.read.1.tlog
 *.pdb
 Debug/main.obj.enc
 *.o
-
+arena
+*.swp
+*.save
