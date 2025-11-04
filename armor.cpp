@@ -24,8 +24,7 @@ cArmor::cArmor(sint dex, sint ac, sint value, string name, string desc, string t
 	if (!desc.empty())
 		mItemDesc = desc;
 
-	if (!type.empty())
-		mItemType = type;
+	mItemType = type;
 
 	isEquipped = false;
 }
@@ -38,5 +37,4 @@ void cArmor::clear()
 	isEquipped = false;
 	mItemName.clear();
 	mItemDesc.clear();
-	mItemType.clear();
 }

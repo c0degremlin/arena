@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include "armor.hpp"
 
 pxWindow px;
 pxSStream ss;
@@ -285,7 +286,7 @@ void rollStats()
 		{
 			// Roll 8-17
 			px.rng(tmp, 8, 17);
-				if (rollCount > 0)
+			if (rollCount > 0)
 			{
 				rollCount--;
 				px.clrscr();
@@ -493,7 +494,7 @@ void purchase()
 		px.text("Menu Options");
 		px.text("a. Purchase armor");
 		px.text("b. Purchase weapon");
-		px.text("r. Return to previous menu");
+		px.text("R. Return to previous menu");
 		px.text("==============================");
 
 		px.getS(gString, "Choice: ");
@@ -569,15 +570,17 @@ void purchase()
 						iValue = const_leatherValue;
 						if (player.getGold() >= iValue)
 						{
-							px.text("Are you sure you want to buy this Padded Armor for ", false);
+							px.text("Are you sure you want to buy this Leather Armor for ", false);
 							px.number(iValue, false);
 							px.getS(gString, "gp? Y or N ");
 							if (gString == "y" || gString == "Y")
 							{
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
-								carmor.setName(const_leatherName); carmor.setAC(const_leatherAC);	carmor.setMaxDex(const_leatherDex); carmor.setValue(const_leatherValue);
-								carmor.setType();
+								carmor.setName(const_leatherName); carmor.setDesc( const_leatherDesc );
+								carmor.setAC(const_leatherAC);	carmor.setType();
+								carmor.setMaxDex(const_leatherDex); carmor.setValue(iValue);
+								
 								player.addArmor(carmor);
 								player.equipArmor();
 	
@@ -590,43 +593,263 @@ void purchase()
 					break;
 					//		showArmor(const_hideName, const_hideAC, const_hideDex, const_hideValue, iCount);
 					case 3:
-						
+						iValue = const_hideValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Hide Armor for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_hideName); carmor.setDesc( const_hideDesc );
+								carmor.setAC(const_hideAC);	carmor.setType();
+								carmor.setMaxDex(const_hideDex); carmor.setValue(iValue);
+								
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
 					break;
 					//		showArmor(const_studdedName, const_studdedAC, const_studdedDex, const_studdedValue, iCount);
 					case 4:
-						
+						iValue = const_studdedValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Studded Armor for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_studdedName); carmor.setDesc( const_studdedDesc );
+								carmor.setAC(const_studdedAC);	carmor.setType();
+								carmor.setMaxDex(const_studdedDex); carmor.setValue(iValue);
+								
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
 					break;
 					//		showArmor(const_scaleName, const_scaleAC, const_scaleDex, const_scaleValue, iCount);
 					case 5:
-						
+						iValue = const_scaleValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Scale Armor for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_scaleName); carmor.setDesc( const_scaleDesc );
+								carmor.setAC(const_scaleAC);	carmor.setType();
+								carmor.setMaxDex(const_scaleDex); carmor.setValue(iValue);
+								
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
 					break;
 					//		showArmor(const_chainshirtName, const_chainshirtAC, const_chainshirtDex, const_chainshirtValue, iCount);
 					case 6:
-						
+						iValue = const_chainshirtValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Chain Shirt Armor for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_chainshirtName); carmor.setDesc( const_chainshirtDesc );
+								carmor.setAC(const_chainshirtAC);	carmor.setType();
+								carmor.setMaxDex(const_chainshirtDex); carmor.setValue( iValue);
+								
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
 					break;
 					//		showArmor(const_chainmailName, const_chainmailAC, const_chainmailDex, const_chainmailValue, iCount);
 					case 7:
-					
+						iValue = const_chainmailValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Chain Mail Armor for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_chainmailName); carmor.setDesc( const_chainmailDesc );
+								carmor.setAC(const_chainmailAC);	carmor.setType();
+								carmor.setMaxDex(const_chainmailDex); carmor.setValue( iValue);
+								
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
 					break;
 					//		showArmor(const_breastplateName, const_breastplateAC, const_breastplateDex, const_breastplateValue, iCount);
 					case 8:
-						
+						iValue = const_breastplateValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Breast Plate Armor for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_breastplateName); carmor.setDesc( const_breastplateDesc );
+								carmor.setAC(const_breastplateAC);	carmor.setType();
+								carmor.setMaxDex(const_breastplateDex); carmor.setValue( iValue);
+								
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
 					break;
 					//		showArmor(const_splintName, const_splintAC, const_splintDex, const_splintValue, iCount);
 					case 9:
-						
+						iValue = const_splintValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Splint Mail Armor for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_splintName); carmor.setDesc( const_splintDesc );
+								carmor.setAC(const_splintAC);	carmor.setType();
+								carmor.setMaxDex(const_splintDex); carmor.setValue( iValue);
+								
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
 					break;
 					//		showArmor(const_bandedName, const_bandedAC, const_bandedDex, const_bandedValue, iCount);
 					case 10:
-						
+						iValue = const_bandedValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Banded Splint Mail Armor for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_bandedName); carmor.setDesc( const_bandedDesc );
+								carmor.setAC(const_bandedAC);	carmor.setType();
+								carmor.setMaxDex(const_bandedDex); carmor.setValue( iValue);
+								
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
 					break;
 					//		showArmor(const_halfplateName, const_halfplateAC, const_halfplateDex, const_halfplateValue, iCount);
 					case 11:
-						
+						iValue = const_halfplateValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Half Plate Suit for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_halfplateName); carmor.setDesc( const_halfplateDesc );
+								carmor.setAC(const_halfplateAC);	carmor.setType();
+								carmor.setMaxDex(const_halfplateDex); carmor.setValue( iValue);
+								
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
 					break;
 					//		showArmor(const_fullplateName, const_fullplateAC, const_fullplateDex, const_fullplateValue, iCount);
 					case 12:
-						
+						iValue = const_fullplateValue;
+						if (player.getGold() >= iValue)
+						{
+							px.text("Are you sure you want to buy this Full Plate Suit for ", false);
+							px.number(iValue, false);
+							px.getS(gString, "gp? Y or N ");
+							if (gString == "y" || gString == "Y")
+							{
+								// Get, deduct and set gold
+								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+								carmor.setName(const_fullplateName); carmor.setDesc( const_fullplateDesc );
+								carmor.setAC(const_fullplateAC);	carmor.setType();
+								carmor.setMaxDex(const_fullplateDex); carmor.setValue( iValue);
+								
+								player.addArmor(carmor);
+								player.equipArmor();
+	
+								bArmorDone = true;	break;
+							}
+							else	break;
+						}
+						else
+							px.pause("You don't have enough gold for that.");
 					break;
 				}
 			}
@@ -688,7 +911,8 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
-							cweapon.setValue(const_daggerValue);	cweapon.setCritical(const_daggerCritical);	cweapon.setCritMod(const_daggerCritMod);
+							cweapon.setValue(const_daggerValue);	cweapon.setCritical(const_daggerCritical);	
+							cweapon.setCritMod(const_daggerCritMod);
 							cweapon.setDamage(const_daggerDamage);	cweapon.setDice(const_daggerDice);
 							player.addWeapon(cweapon);
 							player.equipWeapon();
@@ -1060,7 +1284,14 @@ void fight()
 			if (gString == "y" || gString == "Y")	{	bQuit = true; bFightOver = true;	break;	}	
 		}
 		
-		if (tmp > (player.getLevel() + 1))	{	px.pause("Invalid choice.");	}
+		else if (tmp > (player.getLevel() + 1))	{	px.pause("Invalid choice.");	}
+
+		else if ( tmp <= player.getLevel() )
+		{
+			bQuit = true;
+		}
+
+	}
 		while (!bFightOver)
 		{
 			xpCalc = fightXPDowngrade(tmp, player.getLevel());
@@ -1324,14 +1555,14 @@ void fight()
 			bFightOver = true;
 
 		} // fight over while loop
-	}	// bQuit while loop end
+		// bQuit while loop end
 
-	if (player.getHealth() > 0) // Player is victorious!
-	{
-		// reset player health
-		player.setHealth(player.getMaxHealth());
-		player.level();
-	}
+		if (player.getHealth() > 0) // Player is victorious!
+		{
+			// reset player health
+			player.setHealth(player.getMaxHealth());
+			player.level();
+		}
 }
 
 // show inventory and equipped weapons
@@ -1517,7 +1748,8 @@ void showArmor(string sName, int iAC, int iDex, int iValue, int &iCount)
 cWeapon addWeapon(string sName, string sDesc, int iDice, int iDamage, int iCrit, int iCritMod, int iValue)
 {
 	cWeapon tmp;	tmp.clear();
-	tmp.setName(sName); tmp.setDesc(sDesc);	tmp.setDice(iDice);	tmp.setDamage(iDamage); tmp.setCritical(iCrit); tmp.setCritMod(iCritMod); tmp.setValue(iValue);
+	tmp.setName(sName); tmp.setDesc(sDesc);	tmp.setDice(iDice);	tmp.setDamage(iDamage); 
+	tmp.setCritical(iCrit); tmp.setCritMod(iCritMod); tmp.setValue(iValue);
 	tmp.setType(); // weapon default
 	tmp.setEquipped(false);
 	return tmp;
