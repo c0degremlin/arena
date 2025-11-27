@@ -5,6 +5,14 @@ finish armor and weapon inventory ( add functionality to it, base is half assed 
 add weapon desc as const strings
 ^^ Add these when purchasing
 
+completely rewrite fight from scratch
+
+update weapon and armor functions based on arrays
+have index to not show empty portions of array
+add potion types and setup potion arrays
+
+update purchase function to add weapon without hard coded number one
+
 fight function is buggy as fukkkk, 
 orc always hits?
 add options to heal?
@@ -17,6 +25,8 @@ finish main.cpp equip function
 
 find a better use of player.equip weapon. try to remove the numbers and add a index so we dont get invalid choices and crashes
 finish equipWeapon // not checking stuff, add more functions/break down more
+
+buy weapon but name and desc not added to inventory
 
 split main into managable functions to help with upkeep and such.
 

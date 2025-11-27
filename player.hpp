@@ -17,10 +17,11 @@
 
 #include "phatx.hpp"
 #include "phatSS.hpp"
-#include "item.hpp"
 #include "weapon.hpp"
 #include "armor.hpp"
+#include "potion.hpp"
 
+#include <cstddef>
 #include <vector>
 using std::vector;
 
@@ -43,53 +44,38 @@ const sint const_baseAC = 10;		// Without armor
 class cMonster
 {
 private:
-	bool monsterCanRun; // Only some monsters can be run from. Mostly prey.
 
 protected:
-	bool mIsDead;
 	string mName;
 	string mEquippedWeaponName;
 	sint mHealth;
 	sint mArmor; // AC
 	sint mGold;
 	sint mAttack; // damage
-	sint mAP; // action points
 	sint mExperience; // basics of xp
 public:
 	cMonster();
-	cMonster(sint iHealth, sint iArmor, sint iGold, sint iAttack, sint iAP, sint iXP, bool iCanRun);
+	cMonster(string name, sint iHealth, sint iArmor, sint iGold, sint iAttack, sint iXP);
 	~cMonster();
 
-	void createEnemy(string name, string weapon, sint health, sint armor, sint gold, sint attack, sint ap, sint xp); // make a monster with these stats
-	sint getMod(sint in);
-
+	void createEnemy(string name, string weapon, sint health, sint armor, sint gold, sint attack, sint xp); // make a monster with these stats
 	//accessors
-	const bool canMonsterRun() { return monsterCanRun; }
-	const bool isDead() { return mIsDead; }
 	const string getName() { return mName; }
 	const string getWeaponName() { return mEquippedWeaponName; }
 	const sint getHealth() { return mHealth; }
 	const  sint getArmorClass() { return mArmor; }
 	const sint getGold() { return mGold; }
 	const sint getAttack() { return mAttack; }
-	const sint getAP() { return mAP; }
 	const int getExperience() { return mExperience; }
 
 	// zeros are for debugging purposes
-	void setRun(bool tmp) { monsterCanRun = tmp; }
-	void setDead(bool tmp) { mIsDead = tmp; }
 	void setName(string tmp) { mName = tmp; }
 	void setWeaponName(string tmp) { mEquippedWeaponName = tmp; }
 	void setHealth(sint iNum = 0) { if (iNum >= 0) mHealth = iNum; }
 	void setArmorClass(sint iNum = 0) { if (iNum >= 0) mArmor = iNum; }
 	void setGold(sint iNum = 0) { if (iNum >= 0) mGold = iNum; }
 	void setAttack(sint iNum = 0) { if (iNum >= 0) mAttack = iNum; }
-	void setAP(sint iNum = 0) { if (iNum >= 0) mAP = iNum; }
 	void setExperience(int tmp) { if (tmp >= 0) mExperience = tmp; }
-
-	// add and delete action points
-	void addAP(sint num = 1) { mAP += num; }
-	bool delAP(sint num = 1); // true if you have enough AP.
 };
 
 class cPlayer : public cMonster
@@ -97,8 +83,9 @@ class cPlayer : public cMonster
 private:
 	// Add inventory capabilities.. prob cItem vectors
 
-	vector<cWeapon> mWeaponInventory;
-	vector<cArmor> mArmorInventory;
+	cWeapon mWeaponInventory[3];	
+	cArmor mArmorInventory[3];
+	cPotion mPotionInventory[10];
 	
 
 	cWeapon mWeapon; // This is the equipped stuff
@@ -112,9 +99,6 @@ private:
 	string mClassName; // Certain class use certain weapons
 
 	int mMaxHealth;
-	int mMana;
-	int mMaxMana;
-	int mMaxAP;
 
 	int mStrength; // for attack rolls and armor/weapon checks
 	int mDexterity; // for hit checks, ranged, dagger, sword and unarmed attacks, dodge...
@@ -123,7 +107,6 @@ private:
 	int mWisdom; // for number of spells possible to learn and AP checks
 	int mCharisma; // for mind control, etc checks, better bartering skills, more powerful buffs
 
-	int mPotions; // can only have as many potions as level	
 	int mLevel;
 
 public:
@@ -146,33 +129,31 @@ public:
 	void delArmor(int number = 0);
 	void equipArmor(int number = 0);
 	void getArmor(cArmor &item, int number = 0);
+	size_t  getArmorCount();	// returns armor inventory count
 
 
 	void showInventory();
-	void calcHPandMP();
+	void calcHP();
 
 	// Accessors
 	const string getWeaponDesc() { return mEquippedWeaponDesc; } const string getArmorName() { return mEquippedArmorName; }
 	const string getArmorDesc() { return mEquippedArmorDesc; } const string getClass() { return mClassName; }
-	const int getMaxHealth() { return mMaxHealth; } const int getMana() { return mMana; } const int getMaxMana() { return mMaxMana; }
-	const int getMaxAP() { return mMaxAP; }	 const int getStrength() { return mStrength; } const int getDexterity() { return mDexterity; }
+	const int getMaxHealth() { return mMaxHealth; }
+	const int getStrength() { return mStrength; } const int getDexterity() { return mDexterity; }
 	const int getConstitution() { return mConstitution; } const int getIntelligence() { return mIntelligence; } const int getWisdom() { return mWisdom; }
-	const int getCharisma() { return mCharisma; } const int getPotions() { return mPotions; }
+	const int getCharisma() { return mCharisma; }
 	const int getLevel() { return mLevel; } 
 
 	void setWeaponDesc(string tmp) { mEquippedWeaponDesc = tmp; }
 	void setArmorName(string tmp) { mEquippedArmorName = tmp; } void setArmorDesc(string tmp) { mEquippedArmorDesc = tmp; }
 	void setClass(string tmp) { mClassName = tmp; } void setMaxHealth(int tmp) { if (tmp > 0 && tmp >= mHealth) mMaxHealth = tmp; }
-	void setMana(int tmp) { if (tmp > 0) mMana = tmp; } void setMaxMana(int tmp) { if (tmp > 0 && tmp >= mMana) mMaxMana = tmp; }
-	void setMaxAP(int tmp) { if (tmp > 0 && tmp >= mAP) mMaxAP = tmp; } void setStrength(int tmp) { if (tmp > 7) mStrength = tmp; }
+	void setStrength(int tmp) { if (tmp > 7) mStrength = tmp; }
 	void setDexterity(int tmp) { if (tmp > 7) mDexterity = tmp; } void setConstitution(int tmp) { if (tmp > 7) mConstitution = tmp; }
 	void setIntelligence(int tmp) { if (tmp > 7) mIntelligence = tmp; }
 	void setWisdom(int tmp) { if (tmp > 7) mWisdom = tmp; } void setCharisma(int tmp) { if (tmp > 7) mCharisma = tmp; }
-	void setPotions(int tmp) { if (tmp > 0) mPotions = tmp; }
+
 	void setLevel(int tmp) { if (tmp > 1) mLevel = tmp; } 
-	void fullAP() { mAP = mMaxAP; }
-	void addAP(sint tmp = 1); // do check with maxAP
-	void delAP(sint tmp = 1); // do an advanced check here
+	
 };
 
 #endif

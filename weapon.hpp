@@ -37,6 +37,7 @@ const string const_daggerDesc = "A sharp curved blade that fits perfect in a bel
 const string const_maceDesc = "A club with a metal ball at the end";
 const string const_handaxeDesc = "A handheld axe, very fast";
 const string const_scimitarDesc = "A viciously curved blade, very fast";
+const string const_shortswordDesc = "A one handed blade for warriors";
 const string const_morningstarDesc = "A club with several spikes at the end";
 const string const_spearDesc = "A long pole weapon with a sharp point";
 const string const_longswordDesc = "A straight, double-edged sword";

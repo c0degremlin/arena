@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include "armor.hpp"
+#include "weapon.hpp"
 
 pxWindow px;
 pxSStream ss;
@@ -18,7 +19,7 @@ void testing()
 	player.mCreated = true; player.setLevel(1);
 	player.setGold(5000);	// extra gold for purchases
 
-	player.calcHPandMP();
+	player.calcHP();
 
 	// messing around with the inventory functions to make sure that they work properly.
 
@@ -400,7 +401,7 @@ void rollStats()
 
 		isStatsRolled = true;
 
-		player.calcHPandMP();
+		player.calcHP();
 
 		player.mCreated = true;
 
@@ -453,10 +454,6 @@ void showStats(bool clrscr)
 	px.shortNumber(player.getHealth(), false);
 	px.text(" / ", false);
 	px.shortNumber(player.getMaxHealth());
-	px.text("Mana points: ", false);		// Mana points: curr / max
-	px.shortNumber(player.getMana(), false);
-	px.text(" / ", false);
-	px.shortNumber(player.getMaxMana());
 	px.text("Gold: ", false);
 	px.shortNumber(player.getGold());
 
@@ -911,12 +908,13 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_daggerName); 	cweapon.setDesc(const_daggerDesc);
 							cweapon.setValue(const_daggerValue);	cweapon.setCritical(const_daggerCritical);	
 							cweapon.setCritMod(const_daggerCritMod);
 							cweapon.setDamage(const_daggerDamage);	cweapon.setDice(const_daggerDice);
 							player.addWeapon(cweapon);
-							player.equipWeapon();
 
+							player.equipWeapon(1);
 							bWeaponDone = true;	break;
 						}
 						else	break;
@@ -935,10 +933,12 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_maceName);	cweapon.setDesc(const_maceDesc);
 							cweapon.setValue(const_maceValue);	cweapon.setCritical(const_maceCritical);	cweapon.setCritMod(const_maceCritMod);
 							cweapon.setDamage(const_maceDamage);	cweapon.setDice(const_maceDice);
 							player.addWeapon(cweapon);
-							player.equipWeapon();
+
+							player.equipWeapon(1);
 
 							bWeaponDone = true;	break;
 						}
@@ -958,10 +958,11 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_handaxeName);	cweapon.setDesc(const_handaxeDesc);
 							cweapon.setValue(const_handaxeValue);	cweapon.setCritical(const_handaxeCritical);	cweapon.setCritMod(const_handaxeCritMod);
 							cweapon.setDamage(const_handaxeDamage);	cweapon.setDice(const_handaxeDice);
 							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.equipWeapon(1);
 
 							bWeaponDone = true;	break;
 						}
@@ -981,10 +982,11 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_shortswordName);		cweapon.setDesc(const_shortswordDesc);
 							cweapon.setValue(const_shortswordValue);	cweapon.setCritical(const_shortswordCritical);	cweapon.setCritMod(const_shortswordCritMod);
 							cweapon.setDamage(const_shortswordDamage);	cweapon.setDice(const_shortswordDice);
 							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.equipWeapon(1);
 
 							bWeaponDone = true;	break;
 						}
@@ -1004,10 +1006,11 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_scimitarName);	cweapon.setDesc(const_scimitarDesc);
 							cweapon.setValue(iValue);	cweapon.setCritical(const_scimitarCritical);	cweapon.setCritMod(const_scimitarCritMod);
 							cweapon.setDamage(const_scimitarDamage);	cweapon.setDice(const_scimitarDice);
 							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.equipWeapon(1);
 
 							bWeaponDone = true;	break;
 						}
@@ -1230,7 +1233,7 @@ void fight()
 	cWeapon cweapon;
 
 	bool bFightOver = false;
-	bool bQuit = false;
+	bool bMenu = false;
 	int tmp;
 	sint xpCalc;
 	sint goldCalc;
@@ -1239,21 +1242,31 @@ void fight()
 	sint iInitiative, eInitiative;
 	sint iAttackRoll, eAttackRoll;
 	sint iDamageRoll, eDamageRoll;
+	sint eAttack;
 
 	sint roundCount = 1;
 
-	sint eHP, eAC, eAP, eGold, eXP;
-	sint iDexMod, iStrMod;
+	sint eHP, eAC, eGold, eXP;
 	string eName, eWeaponName;
 
 
 	// Setup static stuff
-	iStrMod = (player.getLevel() + player.getMod(player.getStrength()));
-	iDexMod = (player.getLevel() + player.getMod(player.getDexterity()));
 	player.getWeapon(cweapon);
+	iArmorClass = player.getArmorClass();
 
-	// player AC
-	gShort = player.getArmorClass();	gShort += iDexMod;	iArmorClass = gShort;
+	xpCalc = fightXPDowngrade(tmp, player.getLevel());
+	goldCalc = fightGoldDowngrade(tmp, player.getLevel());
+
+	fightEnemyRNG(enemy, xpCalc, goldCalc);
+
+	eHP = enemy.getHealth();
+	eAttack = enemy.getAttack();
+	eAC = enemy.getArmorClass();
+	eGold = enemy.getGold();
+	eXP = enemy.getExperience();
+	eName = enemy.getName();
+	eWeaponName = enemy.getWeaponName();
+
 
 	if (player.mCreated == false) // no player
 	{
@@ -1261,7 +1274,7 @@ void fight()
 		return;
 	}
 
-	while (!bQuit)
+	while (!bMenu)
 	{
 		px.clrscr();
 		
@@ -1281,51 +1294,25 @@ void fight()
 		// check for a quit selection
 		if (tmp == gInt){
 			px.getS(gString, "Are you sure you want to leave the arena? Y or N ");
-			if (gString == "y" || gString == "Y")	{	bQuit = true; bFightOver = true;	break;	}	
+			if (gString == "y" || gString == "Y")	{	bMenu = true; bFightOver = true;	break;	}	
 		}
-		
-		else if (tmp > (player.getLevel() + 1))	{	px.pause("Invalid choice.");	}
-
-		else if ( tmp <= player.getLevel() )
+		if( tmp < gInt )
 		{
-			bQuit = true;
+			bMenu = false;
+			break;
 		}
-
 	}
-		while (!bFightOver)
-		{
-			xpCalc = fightXPDowngrade(tmp, player.getLevel());
-			goldCalc = fightGoldDowngrade(tmp, player.getLevel());
-
-			fightEnemyRNG(enemy, xpCalc, goldCalc);
-		
-			if (bFightOver)
-				break;
-
-			eHP = enemy.getHealth();
-			eAC = enemy.getArmorClass();
-			eAP = enemy.getAP();
-			eGold = enemy.getGold();
-			eXP = enemy.getExperience();
-
-			eName = enemy.getName();
-			eWeaponName = enemy.getWeaponName();
-
-
+	while (!bFightOver)
+	{
+			
 			px.rng(iInitiative);
 			px.rng(eInitiative);
 
 			px.rng(iAttackRoll);
 			px.rng(eAttackRoll);
 
-			// add dex mod to player initiative roll
-			iInitiative += iDexMod;
-
-			// attack roll
-			iAttackRoll += iStrMod;
-			
-			rollDamage(iDamageRoll, cweapon, iStrMod);
-			px.rng(eDamageRoll, enemy.getAttack(), enemy.getAttack()-1);
+			rollDamage(iDamageRoll, cweapon, 0);
+			px.rng(eDamageRoll, eAttack, eAttack-1);
 
 			px.clrscr();
 			px.text("Round ", false);
@@ -1342,11 +1329,11 @@ void fight()
 			px.sleep(5000);
 			// Initiative hit
 			// player first
-			if (iInitiative >= eInitiative)
-			{
+		if (iInitiative >= eInitiative)
+		{
 				// hit
-				if (iAttackRoll >= eAC)
-				{
+			if (iAttackRoll >= eAC)
+			{
 					px.text("> ", false);
 					px.text(player.getName(), false);
 					px.text(" swings his ", false);
@@ -1357,7 +1344,7 @@ void fight()
 					if (iAttackRoll >= cweapon.getCritical()) // crit hit
 					{
 						for( int i = 0; i < cweapon.getCritMod(); i++)
-							rollDamage(iDamageRoll, cweapon, iStrMod, false);
+							rollDamage(iDamageRoll, cweapon, 0, false);
 
 						px.text(" and critically hits for ", false);
 						px.number(iDamageRoll, false);
@@ -1370,10 +1357,10 @@ void fight()
 						px.text(" damage.");
 					}
 					eHP -= iDamageRoll;
-				}
+			}
 				// miss
-				else
-				{
+			else
+			{
 					px.text("> ", false);
 					px.text(player.getName(), false);
 					px.text(" swings his ", false);
@@ -1381,13 +1368,13 @@ void fight()
 					px.text(" at his opponent ", false);
 					px.text(eName, false);
 					px.text(" and misses.");
-				}
-				px.sleep(1250);
 			}
+				px.sleep(1250);
+		}
 
 			// enemy first
-			else
-			{
+		else
+		{
 				// enemy hit
 				if (eAttackRoll >= iArmorClass)
 				{
@@ -1417,28 +1404,27 @@ void fight()
 					px.text(" and misses.");
 				}
 				px.sleep(1250);
-			}
+		}
 
 			// Rest of the battle after the first round until someone dies.
 
-			while (eHP > 0)
+		while (eHP > 0)
+		{
+			if (player.getHealth() <= 0)
 			{
-				if (player.getHealth() <= 0)
-				{
-					player.mCreated = false;
-					player.setExperience(0);
-					player.setGold(0);
-					break;
-				}
+				player.mCreated = false;
+				player.setExperience(0);
+				player.setGold(0);
+				break;
+			}
 				px.clrscr();
 				roundCount++;
 
 				px.rng(iAttackRoll);
 				px.rng(eAttackRoll);
 
-				iAttackRoll += iStrMod;
 
-				px.rng(eDamageRoll, enemy.getAttack(), enemy.getAttack()+1);
+				px.rng(eDamageRoll, eAttack, eAttack+1);
 
 				// Round # (Player vs. enemy)
 				// hp remaining: #
@@ -1469,7 +1455,7 @@ void fight()
 					{
 						iDamageRoll = 0;
 						for (int i = 0; i < cweapon.getCritMod(); i++)
-							rollDamage(iDamageRoll, cweapon, iStrMod, false);
+							rollDamage(iDamageRoll, cweapon, 0, false);
 
 						px.text(" and critically hits for ", false);
 						px.number(iDamageRoll, false);
@@ -1494,13 +1480,14 @@ void fight()
 					px.text(eName, false);
 					px.text(" and misses.");
 				}
-
-				if (eHP <= 0) // enemy dead
-					break;
-
-				// enemy hit
-				if (eAttackRoll >= iArmorClass)
+				
+				px.sleep(1250);
+			
+				if (eHP > 0) // enemy not dead after player attack, give his turn
 				{
+					// enemy hit
+					if (eAttackRoll >= iArmorClass)
+					{
 					px.text("> ", false);
 					px.text(eName, false);
 					px.text(" swings his ", false);
@@ -1514,10 +1501,10 @@ void fight()
 					gShort = player.getHealth();
 					gShort -= eDamageRoll;
 					player.setHealth(gShort);
-				}
-				// enemy miss
-				else
-				{
+					}
+					// enemy miss
+					else
+					{
 					px.text("> ", false);
 					px.text(eName, false);
 					px.text(" swings his ", false);
@@ -1525,13 +1512,13 @@ void fight()
 					px.text(" at ", false);
 					px.text(player.getName(), false);
 					px.text(" and misses.");
-				}
+					}
 
-				px.sleep(1250);
-			}
+					px.sleep(1250);
+		
 
-			if (eHP <= 0) // enemy died
-			{
+					if (eHP <= 0) // enemy died
+					{
 				gShort = player.getGold();
 				gShort += eGold;
 				player.setGold(gShort);
@@ -1541,28 +1528,32 @@ void fight()
 				player.setExperience(gShort);
 
 				px.text(eName, false);
-				px.text(" has lost. You have gained ", false);
+				px.text(" has died. You have gained ", false);
 				px.number(eGold, false);
 				px.text(" gold and ", false);
 				px.number(eXP, false);
 				px.text(" experience.");
 				px.pause();
 				bFightOver = true;
-				bQuit = true;
+				bMenu = true;
+					}		
+					else if ( player.getHealth() <= 0 )// player died
+					{	
+					px.pause("You have died. Please bring back more bodies!");
+					bFightOver = true;
+					}
+
+				
+
 			}
-			else // player died
-				px.pause("You have died. Please bring back more bodies!");
-			bFightOver = true;
-
-		} // fight over while loop
-		// bQuit while loop end
-
-		if (player.getHealth() > 0) // Player is victorious!
-		{
-			// reset player health
-			player.setHealth(player.getMaxHealth());
-			player.level();
+			if (player.getHealth() > 0 && eHP <= 0) // Player is victorious!
+				{
+					// reset player health
+					player.setHealth(player.getMaxHealth());
+					player.level();
+				}
 		}
+	}
 }
 
 // show inventory and equipped weapons
@@ -1652,19 +1643,19 @@ void fightEnemyRNG(cMonster &in, sint xp, sint gold)
 	switch (gInt)
 	{
 	case 1:
-		in.createEnemy("Orc", "Longsword", 20, 12, xp, 3, 12, gold);
+		in.createEnemy("Orc", "Longsword", 20, 12, gold, 3, xp);
 		break;
 	case 2:
-		in.createEnemy("Orc", "Falchion", 35, 13, xp, 5, 15, gold);
+		in.createEnemy("Orc", "Falchion", 35, 13, gold, 5, xp);
 		break;
 	case 3:
-		in.createEnemy("Orc", "Scimitar", 60, 14, xp, 7, 18, gold);
+		in.createEnemy("Orc", "Scimitar", 60, 14, gold, 7, xp);
 		break;
 	case 4:
-		in.createEnemy("Orc", "Broadsword", 85, 15, xp, 9, 21, gold);
+		in.createEnemy("Orc", "Broadsword", 85, 15, gold, 9, xp);
 		break;
 	case 5:
-		in.createEnemy("Orc", "Waraxe", 100, 16, xp, 11, 24, gold);
+		in.createEnemy("Orc", "Waraxe", 100, 16, gold, 11, xp);
 		break;
 	}
 }
@@ -1675,7 +1666,7 @@ void rollDamage(sint &in, cWeapon weapon, sint strmod, bool erase)
 
 	for (int i = 0; i < weapon.getDice(); i++)
 	{
-		px.rng(gInt, weapon.getDamage(), weapon.getDamage()-1);
+		px.rng(gInt, weapon.getDamage()-1, weapon.getDamage());
 		in += gInt;
 	}
 	in += strmod;

@@ -1,3 +1,3 @@
 echo "Building arena"
-g++ -o arena -g main.cpp armor.cpp inventory.cpp item.cpp phatSS.cpp phatx.cpp player.cpp weapon.cpp
+g++ -g -o arena main.cpp armor.cpp inventory.cpp item.cpp phatSS.cpp phatx.cpp player.cpp potion.cpp weapon.cpp
 echo "Done"

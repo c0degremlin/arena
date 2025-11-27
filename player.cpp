@@ -1,49 +1,33 @@
 #include "player.hpp"
+#include <cstddef>
 
 cMonster::cMonster()
 {
-	mHealth = 0; mArmor = 0; mGold = 0; mAttack = 0; mAP = 0;
-	gNumOfMonsters += 1; monsterCanRun = false; // mostly only prey can run...
+	mHealth = 0; mArmor = 0; mGold = 0; mAttack = 0;
+	gNumOfMonsters += 1;
 }
 
-cMonster::cMonster(sint iHealth, sint iArmor, sint iGold, sint iAttack, sint iAP, sint iXP, bool iCanRun)
+cMonster::cMonster(string name, sint iHealth, sint iArmor, sint iGold, sint iAttack, sint iXP)
 {
 	// use functions for cleaner error checking such as 0 health, 0 attack, 0 armor
-	setHealth(iHealth); setArmorClass(iArmor); setGold(iGold); setAttack(iAttack); setAP(iAP); setExperience(iXP);
-
-	monsterCanRun = iCanRun; gNumOfMonsters += 1;
+	setName(name);
+	setHealth(iHealth); setArmorClass(iArmor); setGold(iGold); setAttack(iAttack); setExperience(iXP);
+	gNumOfMonsters += 1;
 }
 
 cMonster::~cMonster()
 {
 	gNumOfMonsters -= 1;
 }
-
-void cMonster::createEnemy(string name, string weapon, sint health, sint armor, sint gold, sint attack, sint ap, sint xp)
+	
+void cMonster::createEnemy(string name, string weapon, sint health, sint armor, sint gold, sint attack, sint xp)
 {
 	mName = name; mEquippedWeaponName = weapon;
-	mHealth = health; mArmor = armor; mGold = gold; mAttack = attack; mAP = ap; mExperience = xp;
+	mHealth = health; mArmor = armor; mGold = gold; mAttack = attack; mExperience = xp;
 }
 
-sint cMonster::getMod(sint in)
-{
-	in -= 10;
-	in /= 2;
-	return in;
-}
 
-bool cMonster::delAP(sint num)
-{
-	gShort = (mAP -= num);
-	if (gShort >= 0)
-	{
-		mAP = gShort; return true;
-	}
-	else
-	{
-		px.pause("Can't do that. You are too tired."); return false;
-	}
-}
+
 
 cPlayer::cPlayer()
 {
@@ -53,17 +37,15 @@ cPlayer::cPlayer()
 	mEquippedArmorDesc = "Bare flesh and cloth loins";
 	mClassName = "Farmer";
 
-	mIsDead = false;
 	mCreated = false;
 
-	mHealth = mMaxHealth = mMana = mMaxMana = mGold = mAttack = mAP = mMaxAP = 0;
+	mHealth = mMaxHealth = mGold = mAttack = 0;
 
 	mStrength = mDexterity = mConstitution = mIntelligence = mWisdom = mCharisma = 0;
 
 	mArmor = const_baseAC; // base 10 AC
 	mAttack = const_unarmedDamage; // 1d3 unarmed
 
-	mPotions = 0;
 	mExperience = 0;
 	mLevel = 1;
 
@@ -75,71 +57,95 @@ cPlayer::~cPlayer()
 
 }
 
-void cPlayer::addAP(sint num)
-{
-	gShort = mAP + num;
-	if (gShort <= mMaxAP)
-		mAP = gShort;
-	else
-	{
-		cout << __LINE__ << endl;
-		px.pause("Error: Can't add action points");
-	}
-}
 
 void cPlayer::addWeapon(cWeapon item, int number)
 {
-	if (number == 0)	// default add to top of the stack
-		mWeaponInventory.push_back(item);
-	else			// replace specfic item
-		mWeaponInventory.at(number) = item;
+	switch(number)
+	{
+		case 0:
+			mWeaponInventory[0] = item;
+		break;
+		
+		case 1:
+			mWeaponInventory[1] = item;
+		break;
+
+		case 2:
+			mWeaponInventory[2] = item;
+		break;
+
+		default:
+			cout << "Error addWeapon number out of bounds";
+			cin.get(); cin.get();
+		break;
+	}
 }
 
 void cPlayer::delWeapon(int number)
 {
-	if (number == 0)	// default remove from top of the stack
-		mWeaponInventory.pop_back();
-	else			// replace specfic item
-		mWeaponInventory.erase(mWeaponInventory.begin(), mWeaponInventory.begin() + number);
+	if(number < 4 && number >= 0)
+		mWeaponInventory[number] = 0;
 }
 
 void cPlayer::equipWeapon(int number)
 {
-	if (mWeapon.getIsEquipped())
-	{
-		px.text(mWeapon.getName(), false);
-		px.text(" is already equipped...");
-		px.pause();
-	}
-	else
-	{
-		mWeapon = mWeaponInventory.at(number);
 		mEquippedWeaponName = mWeapon.getName();
 		mEquippedWeaponDesc = mWeapon.getDesc();
 		mAttack = mWeapon.getDamage();
 		mWeapon.flipEquipped();
-	}
 }
 
 void cPlayer::getWeapon(cWeapon &item, int number)
 {
-	item = mWeaponInventory.at(number);
+	if(number < 4 )
+		item = mWeaponInventory[number];
 }
+
 
 void cPlayer::addArmor(cArmor item, int number)
 {
-	if (number == 0)	// default add to top of the stack
-		mArmorInventory.push_back(item);
-	else			// replace specfic item
-		mArmorInventory.at(number) = item;
+	switch(number)
+	{
+		case 0:
+			mArmorInventory[0] = item;
+		break;
+		
+		case 1:
+			mArmorInventory[1] = item;
+		break;
+
+		case 2:
+			mArmorInventory[2] = item;
+		break;
+
+		default:
+			cout << "Error addArmor number out of bounds" << endl;
+			cin.get(); cin.get();
+		break;
+	}
 }
 
 void cPlayer::delArmor(int number)
 {
-	if (number == 0)	// default remove from top of the stack
-		mArmorInventory.pop_back();
-	else			// replace specfic item
-		mArmorInventory.erase(mArmorInventory.begin(), mArmorInventory.begin() + number);
+	switch(number)
+	{
+		case 0:
+			mArmorInventory[0] = 0;
+		break;
+
+		case 1:
+			mArmorInventory[1] = 0;
+		break;
+
+		case 2:
+			mArmorInventory[2] = 0;
+		break;
+
+		default:
+			cout << "Error delArmor number out of bounds" << endl;
+			cin.get(); cin.get();
+		break;
+	}
 }
 
 void cPlayer::equipArmor(int number)
@@ -150,9 +156,9 @@ void cPlayer::equipArmor(int number)
 		px.text(" is already equipped...");
 		px.pause();
 	}
-	else
+	else if ( number < 4 )
 	{
-		mArmor = mArmorInventory.at(number);
+		mArmor = mArmorInventory[number];
 		mEquippedArmorName = mArmor.getName();
 		mEquippedArmorDesc = mArmor.getDesc();
 		mArmor.flipEquipped();
@@ -161,8 +167,11 @@ void cPlayer::equipArmor(int number)
 
 void cPlayer::getArmor(cArmor &item, int number)
 {
-	item = mArmorInventory.at(number);
+	if(number < 4)
+	item = mArmorInventory[number];
 }
+
+
 
 void cPlayer::level()
 {
@@ -193,10 +202,9 @@ void cPlayer::level()
 		{
 			mLevel = levelChart.at(mLevel);
 			px.rng(gShort, 10);
-			gShort += getMod(mConstitution);
 			mHealth += gShort;
 			mMaxHealth = mHealth;
-			calcHPandMP();
+			calcHP();
 
 			px.text("You leveled up! You are now level ", false);
 			px.shortNumber(mLevel, false);
@@ -212,46 +220,46 @@ void cPlayer::level()
 
 void cPlayer::showInventory()
 {
-	cArmor armor_tmp;
 	px.clrscr();
 
 	px.text("==============================");
-	px.text("Weapon inventory:");
+	px.text("Weapon inventory");
 	px.text("==============================");
 
-	for (auto weapon_tmp = mWeaponInventory.begin(); weapon_tmp != mWeaponInventory.end(); ++weapon_tmp)
+
+
+	for (int index = 0; index < sizeof(mWeaponInventory) / sizeof(mWeaponInventory[0]); index++)
 	{
 
 		px.text("Name: ", false);			// Name: Dagger		Desc: A curved menacing short blade
-		px.text(weapon_tmp->getName(), false);		// Damage: 2d8		Critical: 20x2
+		px.text(mWeaponInventory[index].getName(), false);		// Damage: 2d8		Critical: 20x2
 		px.text("        Desc: ", false);			// Value: 200		Type: Handheld blade
-		px.text(weapon_tmp->getDesc());		//
-		px.text("Damage: ", false);		px.shortNumber(weapon_tmp->getDice(), false);
-		px.text("d", false);		px.shortNumber(weapon_tmp->getDamage(), false);
-		px.text("        Critical: ", false);	px.shortNumber(weapon_tmp->getCritical(), false); px.text("x", false); px.shortNumber(weapon_tmp->getCritMod());
-		px.text("Value: ", false); px.shortNumber(weapon_tmp->getValue(), false); px.text("gp    Type: ", false); px.text(weapon_tmp->getType());
+		px.text(mWeaponInventory[index].getDesc());		//
+		px.text("Damage: ", false);		px.shortNumber(mWeaponInventory[index].getDice(), false);
+		px.text("d", false);		px.shortNumber(mWeaponInventory[index].getDamage(), false);
+		px.text("        Critical: ", false);	px.shortNumber(mWeaponInventory[index].getCritical(), false); px.text("x", false); px.shortNumber(mWeaponInventory[index].getCritMod());
+		px.text("Value: ", false); px.shortNumber(mWeaponInventory[index].getValue(), false); px.text("gp    Type: ", false); px.text(mWeaponInventory[index].getType());
+		
 	} // end for weapon loop
+	
+	px.nl(4);
+	px.text("=============================");
+	px.text("Armor Inventory");
+	px.text("=============================");
 
+	for( int index = 0; index < sizeof(mArmorInventory) / sizeof(mArmorInventory[0]); index++)
+	{
+		// setup output for armor inventory
+	}
 }
 
-void cPlayer::calcHPandMP()
+void cPlayer::calcHP()
 {
 
-	sint hp, maxhp, mana, maxmana, ap, maxap;
-
+	sint hp, maxhp;
 	hp = mConstitution;
 	hp *= const_hpScaling;
 	maxhp = hp;
 
-	mana = mIntelligence;
-	mana *= const_manaScaling;
-	maxmana = mana;
-
-	ap = mDexterity;
-	ap *= const_apScaling;
-	maxap = ap;
-
 	mHealth = hp; mMaxHealth = maxhp;
-	mMana = mana; mMaxMana = maxmana;
-	mAP = ap; mMaxAP = maxap;
 }
