@@ -14,12 +14,10 @@ fight doesnt reset half the time, and he loses his weapons and stuff if he dies.
 #include "phatSS.hpp"
 #include "phatx.hpp"
 #include "player.hpp"
-#include "item.hpp"
 #include "weapon.hpp"
 #include "inventory.hpp"
 #include "armor.hpp"
 
-cPlayer player;
 
 void createCharacter(); // rolls for stats and assign name 
 void nameCharacter(); 	// name player object
@@ -38,7 +36,7 @@ void rollDamage(sint &in, cWeapon weapon, sint strmod = 0, bool erase = true);
 void testing(); //	for new features
 
 void showWeapon(string sName, int iDice, int iDamage, int iCrit, int iCritMod, int iValue, int &iCount);
-void showArmor(string sName, int iAC, int iDex, int iValue, int &iCount);
+void showArmor(string sName, int iAC, int iValue, int &iCount);
 
 cWeapon addWeapon(string sName, string sDesc, int iDice, int iDamage, int iCrit, int iCritMod, int iValue);
 cArmor addArmor(string sName, string sDesc, int iAC, int iDex, int iValue);

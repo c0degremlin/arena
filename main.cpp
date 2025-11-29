@@ -1,11 +1,12 @@
 #include "main.hpp"
 #include "armor.hpp"
+#include "player.hpp"
 #include "weapon.hpp"
 
 pxWindow px;
 pxSStream ss;
 
-int gNumOfMonsters = 0;
+cPlayer player;
 
 void testing()
 {
@@ -14,12 +15,10 @@ void testing()
 		const_daggerCritMod, const_daggerValue, const_daggerName, const_daggerDesc, "weapon");
 	player.addWeapon(tmp);
 	player.equipWeapon();
-	player.setName("Faldor"); player.setStrength(15); player.setDexterity(15); player.setConstitution(15); player.setIntelligence(15);
-	player.setWisdom(15); player.setCharisma(15);
-	player.mCreated = true; player.setLevel(1);
+	player.setName("Faldor"); 
+	player.mCreated = true; player.setLevel(3);
 	player.setGold(5000);	// extra gold for purchases
-
-	player.calcHP();
+	player.setArmorClass(const_baseAC);
 
 	// messing around with the inventory functions to make sure that they work properly.
 
@@ -46,6 +45,7 @@ int main()
 		px.text("==============================");
 
 		px.getS(gString, "Choice: ");
+
 		if (gString == "a" || gString == "A")
 			createCharacter();
 		else if (gString == "b" || gString == "B")
@@ -85,15 +85,12 @@ void createCharacter()
 		px.text("==============================");
 		px.nl(1);
 		px.text("a. Name Character");
-		px.text("b. Roll for Stats");
 		px.text("R. Return to previous menu");
 		px.text("==============================");
 
 		px.getS(gString, "Choice: ");
 		if (gString == "a" || gString == "A")
 			nameCharacter();
-		else if (gString == "b" || gString == "B")
-			rollStats();
 		else if (gString == "r" || gString == "R") // maybe do a double check here in the final version
 			isCharacterMade = true;
 		else
@@ -136,278 +133,6 @@ void nameCharacter()
 }
 
 
-/*
-//  Bugs:
-		
-
-int mStrength; // for attack rolls and armor/weapon checks
-int mDexterity; // for hit checks, ranged, dagger, sword and unarmed attacks, dodge...
-int mConstituion; // for health calcs and poison check
-int mIntelligence; // for spell checks and damage, mana calcs, mind control, etc checks
-int mWisdom; // for number of spells possible to learn and AP checks
-int mCharisma; // for mind control, etc checks, better bartering skills, more powerful buffs
-*/
-void rollStats()
-{
-	sint rollCount = 5; 	// max five rolls
-	sint tmp = 0;
-	bool isStatsRolled = false;
-	bool nextStat = false;
-	
-	if (player.mCreated == true)
-	{
-		gString.clear();
-		showStats(false);
-		px.getS(gString, "Character already rolled for stats. Would you like to reroll? Y or N: ");
-		if (gString == "n" || gString == "N")
-			return;
-	}
-
-	while (!isStatsRolled)
-	{
-		while (!nextStat)
-		{
-			// Roll 8-17
-			px.rng(tmp, 8, 17);
-			
-			if (rollCount > 0)
-			{
-				rollCount--;
-				px.clrscr();
-				px.text("Rolls left: ", false);
-				px.number(rollCount);
-				px.text("Roll for strength: ", false);
-				px.number(tmp);
-				px.getS(gString, "Roll again? Y or N: ");
-				if (gString == "n" || gString == "N")
-				{
-					px.nl(1);
-					px.text("You want to have ", false);
-					px.number(tmp, false);
-					px.getS(gString, " for strength? Y or N: ");
-					if (gString == "y" || gString == "Y")
-					{
-						player.setStrength(tmp);
-						tmp = 0;	rollCount = 5;
-						nextStat = true;
-					} // set player strength if loop
-				} // keep strength roll if loop
-			}	// roll count if loop
-			else
-			{
-				px.text("Final roll. Strength is ", false);
-				px.number(tmp);
-				player.setStrength(tmp);
-				tmp = 0;	rollCount = 5;
-				nextStat = true;
-				px.pause();
-			}
-		} // strength while
-
-		nextStat = false;
-		while (!nextStat)
-		{
-			// Roll 8-17
-			px.rng(tmp, 8, 17);
-			if (rollCount > 0)
-			{
-				rollCount--;
-				px.clrscr();
-				px.text("Rolls left: ", false);
-				px.number(rollCount);
-				px.text("Roll for dexterity: ", false);
-				px.number(tmp);
-				px.getS(gString, "Roll again? Y or N: ");
-				if (gString == "n" || gString == "N")
-				{
-					px.nl(1);
-					px.text("You want to have ", false);
-					px.number(tmp, false);
-					px.getS(gString, " for dexterity? Y or N: ");
-					if (gString == "y" || gString == "Y")
-					{
-						player.setDexterity(tmp);
-						tmp = 0;	rollCount = 5;
-						nextStat = true;
-					} // set player dexterity if loop
-				} // keep dexterity if loop
-			}	// roll count if loop
-			else
-			{
-				px.text("Final roll. Dexterity is ", false);
-				px.number(tmp);
-				player.setDexterity(tmp);
-				tmp = 0;	rollCount = 5;
-				nextStat = true;
-				px.pause();
-			}
-		} // dexterity while
-
-		nextStat = false;
-		while (!nextStat)
-		{
-			// Roll 8-17
-			px.rng(tmp, 8, 17);
-			if (rollCount > 0)
-			{
-				rollCount--;
-				px.clrscr();
-				px.text("Rolls left: ", false);
-				px.number(rollCount);
-				px.text("Roll for constitution: ", false);
-				px.number(tmp);
-				px.getS(gString, "Roll again? Y or N: ");
-				if (gString == "n" || gString == "N")
-				{
-					px.nl(1);
-					px.text("You want to have ", false);
-					px.number(tmp, false);
-					px.getS(gString, " for constitution? Y or N: ");
-					if (gString == "y" || gString == "Y")
-					{
-						player.setConstitution(tmp);
-						tmp = 0;	rollCount = 5;
-						nextStat = true;
-					} // set player constitution if loop
-				} // keep constitution if loop
-			}	// roll count if loop
-			else
-			{
-				px.text("Final roll. Constitution is ", false);
-				px.number(tmp);
-				player.setConstitution(tmp);
-				tmp = 0;	rollCount = 5;
-				nextStat = true;
-				px.pause();
-			}
-		} // constitution while
-
-		nextStat = false;
-		while (!nextStat)
-		{
-			// Roll 8-17
-			px.rng(tmp, 8, 17);
-			if (rollCount > 0)
-			{
-				rollCount--;
-				px.clrscr();
-				px.text("Rolls left: ", false);
-				px.number(rollCount);
-				px.text("Roll for intelligence: ", false);
-				px.number(tmp);
-				px.getS(gString, "Roll again? Y or N: ");
-				if (gString == "n" || gString == "N")
-				{
-					px.nl(1);
-					px.text("You want to have ", false);
-					px.number(tmp, false);
-					px.getS(gString, " for intelligence? Y or N: ");
-					if (gString == "y" || gString == "Y")
-					{
-						player.setIntelligence(tmp);
-						tmp = 0;	rollCount = 5;
-						nextStat = true;
-					} // set player intelligence if loop
-				} // keep intelligence if loop
-			} // roll count if loop
-			else
-			{
-				px.text("Final roll. Intelligence is ", false);
-				px.number(tmp);
-				player.setIntelligence(tmp);
-				tmp = 0;	rollCount = 5;
-				nextStat = true;
-				px.pause();
-			}
-		} // intelligence while
-
-		nextStat = false;
-		while (!nextStat)
-		{
-			// Roll 8-17
-			px.rng(tmp, 8, 17);
-			if (rollCount > 0)
-			{
-				rollCount--;
-				px.clrscr();
-				px.text("Rolls left: ", false);
-				px.number(rollCount);
-				px.text("Roll for wisdom: ", false);
-				px.number(tmp);
-				px.getS(gString, "Roll again? Y or N: ");
-				if (gString == "n" || gString == "N")
-				{
-					px.nl(1);
-					px.text("You want to have ", false);
-					px.number(tmp, false);
-					px.getS(gString, " for wisdom? Y or N: ");
-					if (gString == "y" || gString == "Y")
-					{
-						player.setWisdom(tmp);
-						tmp = 0; rollCount = 5;
-						nextStat = true;
-					} // set player wisdom if loop
-				} // keep wisdom if loop
-			}	// roll count if loop
-			else
-			{
-				px.text("Final roll. Wisdom is ", false);
-				px.number(tmp);
-				player.setWisdom(tmp);
-				tmp = 0;	rollCount = 5;
-				nextStat = true;
-				px.pause();
-			}
-		} // wisdom while
-
-		nextStat = false;
-		while (!nextStat)
-		{
-			// Roll 8-17
-			px.rng(tmp, 8, 17);
-			if (rollCount > 0)
-			{
-				rollCount--;
-				px.clrscr();
-				px.text("Rolls left: ", false);
-				px.number(rollCount);
-				px.text("Roll for charisma: ", false);
-				px.number(tmp);
-				px.getS(gString, "Roll again? Y or N: ");
-				if (gString == "n" || gString == "N")
-				{
-					px.nl(1);
-					px.text("You want to have ", false);
-					px.number(tmp, false);
-					px.getS(gString, " for charisma? Y or N: ");
-					if (gString == "y" || gString == "Y")
-					{
-						player.setCharisma(tmp);
-						tmp = 0;
-						nextStat = true;
-					} // set player charisma if loop
-				} // keep charisma if loop
-			}	// roll count if 
-			else
-			{
-				px.text("Final roll. Charisma is ", false);
-				px.number(tmp);
-				player.setCharisma(tmp);
-				tmp = 0;	rollCount = 5;
-				nextStat = true;
-				px.pause();
-			}
-		} // charisma while
-
-		isStatsRolled = true;
-
-		player.calcHP();
-
-		player.mCreated = true;
-
-	} // end while
-}
-
 // Shows player stats
 /*
 
@@ -438,18 +163,6 @@ void showStats(bool clrscr)
 	px.shortNumber(player.getLevel(), false); //	Gold: 
 	px.text("    Experience: ", false);
 	px.shortNumber(player.getExperience());
-	px.text("Str: ", false);
-	px.shortNumber(player.getStrength(), false);
-	px.text("    Dex: ", false);
-	px.shortNumber(player.getDexterity(), false);
-	px.text("    Con: ", false);
-	px.shortNumber(player.getConstitution());
-	px.text("Int: ", false);
-	px.shortNumber(player.getIntelligence(), false);
-	px.text("    Wis: ", false);
-	px.shortNumber(player.getWisdom(), false);
-	px.text("    Char: ", false);
-	px.shortNumber(player.getCharisma());
 	px.text("Hit points: ", false);		// Hit points: curr / max
 	px.shortNumber(player.getHealth(), false);
 	px.text(" / ", false);
@@ -490,7 +203,7 @@ void purchase()
 		px.text("==============================");
 		px.text("Menu Options");
 		px.text("a. Purchase armor");
-		px.text("b. Purchase weapon");
+		px.text("w. Purchase weapon");
 		px.text("R. Return to previous menu");
 		px.text("==============================");
 
@@ -507,18 +220,18 @@ void purchase()
 				px.text("Name | AC | Dex Mod | Value");
 				px.nl();
 				
-				showArmor(const_paddedName, const_paddedAC, const_paddedDex, const_paddedValue, iCount);
-				showArmor(const_leatherName, const_leatherAC, const_leatherDex, const_leatherValue, iCount);
-				showArmor(const_hideName, const_hideAC, const_hideDex, const_hideValue, iCount);
-				showArmor(const_studdedName, const_studdedAC, const_studdedDex, const_studdedValue, iCount);
-				showArmor(const_scaleName, const_scaleAC, const_scaleDex, const_scaleValue, iCount);
-				showArmor(const_chainshirtName, const_chainshirtAC, const_chainshirtDex, const_chainshirtValue, iCount);
-				showArmor(const_chainmailName, const_chainmailAC, const_chainmailDex, const_chainmailValue, iCount);
-				showArmor(const_breastplateName, const_breastplateAC, const_breastplateDex, const_breastplateValue, iCount);
-				showArmor(const_splintName, const_splintAC, const_splintDex, const_splintValue, iCount);
-				showArmor(const_bandedName, const_bandedAC, const_bandedDex, const_bandedValue, iCount);
-				showArmor(const_halfplateName, const_halfplateAC, const_halfplateDex, const_halfplateValue, iCount);
-				showArmor(const_fullplateName, const_fullplateAC, const_fullplateDex, const_fullplateValue, iCount);
+				showArmor(const_paddedName, const_paddedAC, const_paddedValue, iCount);
+				showArmor(const_leatherName, const_leatherAC, const_leatherValue, iCount);
+				showArmor(const_hideName, const_hideAC, const_hideValue, iCount);
+				showArmor(const_studdedName, const_studdedAC, const_studdedValue, iCount);
+				showArmor(const_scaleName, const_scaleAC, const_scaleValue, iCount);
+				showArmor(const_chainshirtName, const_chainshirtAC, const_chainshirtValue, iCount);
+				showArmor(const_chainmailName, const_chainmailAC, const_chainmailValue, iCount);
+				showArmor(const_breastplateName, const_breastplateAC, const_breastplateValue, iCount);
+				showArmor(const_splintName, const_splintAC, const_splintValue, iCount);
+				showArmor(const_bandedName, const_bandedAC, const_bandedValue, iCount);
+				showArmor(const_halfplateName, const_halfplateAC, const_halfplateValue, iCount);
+				showArmor(const_fullplateName, const_fullplateAC, const_fullplateValue, iCount);
 				
 				// end Armor choices
 				px.number(iCount, false);
@@ -549,11 +262,11 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_paddedName); carmor.setDesc(const_paddedDesc);
-								carmor.setAC(const_paddedAC);	
-								carmor.setMaxDex(const_paddedDex); carmor.setValue(const_paddedValue);
+								carmor.setAC(const_paddedAC);	carmor.setValue(const_paddedValue);
 								carmor.setType();
-								player.addArmor(carmor);
-								player.equipArmor();
+
+								player.addArmor(carmor, player.getArmorCount());
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -575,11 +288,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_leatherName); carmor.setDesc( const_leatherDesc );
-								carmor.setAC(const_leatherAC);	carmor.setType();
-								carmor.setMaxDex(const_leatherDex); carmor.setValue(iValue);
+								carmor.setAC(const_leatherAC);	carmor.setType();	carmor.setValue(iValue);
 								
-								player.addArmor(carmor);
-								player.equipArmor();
+								player.addArmor(carmor, player.getArmorCount());
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -601,11 +313,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_hideName); carmor.setDesc( const_hideDesc );
-								carmor.setAC(const_hideAC);	carmor.setType();
-								carmor.setMaxDex(const_hideDex); carmor.setValue(iValue);
+								carmor.setAC(const_hideAC);	carmor.setType();	carmor.setValue(iValue);
 								
-								player.addArmor(carmor);
-								player.equipArmor();
+								player.addArmor(carmor, player.getArmorCount());
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -627,11 +338,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_studdedName); carmor.setDesc( const_studdedDesc );
-								carmor.setAC(const_studdedAC);	carmor.setType();
-								carmor.setMaxDex(const_studdedDex); carmor.setValue(iValue);
+								carmor.setAC(const_studdedAC);	carmor.setType();	carmor.setValue(iValue);
 								
-								player.addArmor(carmor);
-								player.equipArmor();
+								player.addArmor(carmor, player.getArmorCount());
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -653,11 +363,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_scaleName); carmor.setDesc( const_scaleDesc );
-								carmor.setAC(const_scaleAC);	carmor.setType();
-								carmor.setMaxDex(const_scaleDex); carmor.setValue(iValue);
+								carmor.setAC(const_scaleAC);	carmor.setType();	carmor.setValue(iValue);
 								
-								player.addArmor(carmor);
-								player.equipArmor();
+								player.addArmor(carmor, player.getArmorCount());
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -679,11 +388,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_chainshirtName); carmor.setDesc( const_chainshirtDesc );
-								carmor.setAC(const_chainshirtAC);	carmor.setType();
-								carmor.setMaxDex(const_chainshirtDex); carmor.setValue( iValue);
+								carmor.setAC(const_chainshirtAC);	carmor.setType();	carmor.setValue( iValue);
 								
-								player.addArmor(carmor);
-								player.equipArmor();
+								player.addArmor(carmor, player.getArmorCount());
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -705,11 +413,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_chainmailName); carmor.setDesc( const_chainmailDesc );
-								carmor.setAC(const_chainmailAC);	carmor.setType();
-								carmor.setMaxDex(const_chainmailDex); carmor.setValue( iValue);
+								carmor.setAC(const_chainmailAC);	carmor.setType();	carmor.setValue( iValue);
 								
-								player.addArmor(carmor);
-								player.equipArmor();
+								player.addArmor(carmor, player.getArmorCount());
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -731,11 +438,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_breastplateName); carmor.setDesc( const_breastplateDesc );
-								carmor.setAC(const_breastplateAC);	carmor.setType();
-								carmor.setMaxDex(const_breastplateDex); carmor.setValue( iValue);
+								carmor.setAC(const_breastplateAC);	carmor.setType();	carmor.setValue( iValue);
 								
-								player.addArmor(carmor);
-								player.equipArmor();
+								player.addArmor(carmor, player.getArmorCount());
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -757,11 +463,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_splintName); carmor.setDesc( const_splintDesc );
-								carmor.setAC(const_splintAC);	carmor.setType();
-								carmor.setMaxDex(const_splintDex); carmor.setValue( iValue);
+								carmor.setAC(const_splintAC);	carmor.setType();	carmor.setValue( iValue);
 								
-								player.addArmor(carmor);
-								player.equipArmor();
+								player.addArmor(carmor, player.getArmorCount());
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -783,11 +488,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_bandedName); carmor.setDesc( const_bandedDesc );
-								carmor.setAC(const_bandedAC);	carmor.setType();
-								carmor.setMaxDex(const_bandedDex); carmor.setValue( iValue);
+								carmor.setAC(const_bandedAC);	carmor.setType();	carmor.setValue( iValue);
 								
-								player.addArmor(carmor);
-								player.equipArmor();
+								player.addArmor(carmor), player.getArmorCount();
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -809,11 +513,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_halfplateName); carmor.setDesc( const_halfplateDesc );
-								carmor.setAC(const_halfplateAC);	carmor.setType();
-								carmor.setMaxDex(const_halfplateDex); carmor.setValue( iValue);
+								carmor.setAC(const_halfplateAC);	carmor.setType();	carmor.setValue( iValue);
 								
 								player.addArmor(carmor);
-								player.equipArmor();
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -835,11 +538,10 @@ void purchase()
 								// Get, deduct and set gold
 								gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
 								carmor.setName(const_fullplateName); carmor.setDesc( const_fullplateDesc );
-								carmor.setAC(const_fullplateAC);	carmor.setType();
-								carmor.setMaxDex(const_fullplateDex); carmor.setValue( iValue);
+								carmor.setAC(const_fullplateAC);	carmor.setType();	carmor.setValue( iValue);
 								
-								player.addArmor(carmor);
-								player.equipArmor();
+								player.addArmor(carmor, player.getArmorCount());
+								player.equipArmor(player.getArmorCount());
 	
 								bArmorDone = true;	break;
 							}
@@ -851,7 +553,7 @@ void purchase()
 				}
 			}
 		}
-		else if (gString == "b" || gString == "B")	// Weapon
+		else if (gString == "w" || gString == "W")	// Weapon
 		{
 			while (!bWeaponDone)
 			{
@@ -912,9 +614,9 @@ void purchase()
 							cweapon.setValue(const_daggerValue);	cweapon.setCritical(const_daggerCritical);	
 							cweapon.setCritMod(const_daggerCritMod);
 							cweapon.setDamage(const_daggerDamage);	cweapon.setDice(const_daggerDice);
-							player.addWeapon(cweapon);
+							player.addWeapon(cweapon, player.getWeaponCount());
 
-							player.equipWeapon(1);
+							player.equipWeapon(player.getWeaponCount());
 							bWeaponDone = true;	break;
 						}
 						else	break;
@@ -936,9 +638,9 @@ void purchase()
 							cweapon.setName(const_maceName);	cweapon.setDesc(const_maceDesc);
 							cweapon.setValue(const_maceValue);	cweapon.setCritical(const_maceCritical);	cweapon.setCritMod(const_maceCritMod);
 							cweapon.setDamage(const_maceDamage);	cweapon.setDice(const_maceDice);
-							player.addWeapon(cweapon);
+							player.addWeapon(cweapon, player.getWeaponCount());
 
-							player.equipWeapon(1);
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -961,8 +663,8 @@ void purchase()
 							cweapon.setName(const_handaxeName);	cweapon.setDesc(const_handaxeDesc);
 							cweapon.setValue(const_handaxeValue);	cweapon.setCritical(const_handaxeCritical);	cweapon.setCritMod(const_handaxeCritMod);
 							cweapon.setDamage(const_handaxeDamage);	cweapon.setDice(const_handaxeDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon(1);
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -985,8 +687,8 @@ void purchase()
 							cweapon.setName(const_shortswordName);		cweapon.setDesc(const_shortswordDesc);
 							cweapon.setValue(const_shortswordValue);	cweapon.setCritical(const_shortswordCritical);	cweapon.setCritMod(const_shortswordCritMod);
 							cweapon.setDamage(const_shortswordDamage);	cweapon.setDice(const_shortswordDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon(1);
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -1009,8 +711,8 @@ void purchase()
 							cweapon.setName(const_scimitarName);	cweapon.setDesc(const_scimitarDesc);
 							cweapon.setValue(iValue);	cweapon.setCritical(const_scimitarCritical);	cweapon.setCritMod(const_scimitarCritMod);
 							cweapon.setDamage(const_scimitarDamage);	cweapon.setDice(const_scimitarDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon(1);
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -1030,10 +732,11 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName( const_morningstarName);	cweapon.setDesc(const_morningstarDesc);
 							cweapon.setValue(iValue);	cweapon.setCritical(const_morningstarCritical);	cweapon.setCritMod(const_morningstarCritMod);
 							cweapon.setDamage(const_morningstarDamage);	cweapon.setDice(const_morningstarDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -1053,10 +756,11 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_spearName);	cweapon.setDesc(const_spearDesc);
 							cweapon.setValue(iValue);	cweapon.setCritical(const_spearCritical);	cweapon.setCritMod(const_spearCritMod);
 							cweapon.setDamage(const_spearDamage);	cweapon.setDice(const_spearDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -1076,10 +780,11 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_longswordName);	cweapon.setDesc(const_longswordDesc);
 							cweapon.setValue(iValue);	cweapon.setCritical(const_longswordCritical);	cweapon.setCritMod(const_longswordCritMod);
 							cweapon.setDamage(const_longswordDamage);	cweapon.setDice(const_longswordDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -1099,10 +804,11 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_greatclubName);	cweapon.setDesc(const_greatclubDesc);
 							cweapon.setValue(iValue);	cweapon.setCritical(const_greatclubCritical);	cweapon.setCritMod(const_greatclubCritMod);
 							cweapon.setDamage(const_greatclubDamage);	cweapon.setDice(const_greatclubDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -1122,10 +828,11 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_halberdName);	cweapon.setDesc(const_halberdDesc);
 							cweapon.setValue(iValue);	cweapon.setCritical(const_halberdCritical);	cweapon.setCritMod(const_halberdCritMod);
 							cweapon.setDamage(const_halberdDamage);	cweapon.setDice(const_halberdDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 							
 							bWeaponDone = true;
 							break;
@@ -1146,10 +853,12 @@ void purchase()
 						if (gString == "y" || gString == "Y")
 						{
 							// Get, deduct and set gold
-							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);cweapon.setValue(iValue);	cweapon.setCritical(const_bastardswordCritical);	cweapon.setCritMod(const_bastardswordCritMod);
+							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_bastardswordName);	cweapon.setDesc(const_bastardswordDesc);
+							cweapon.setValue(iValue);	cweapon.setCritical(const_bastardswordCritical);	cweapon.setCritMod(const_bastardswordCritMod);
 							cweapon.setDamage(const_bastardswordDamage);	cweapon.setDice(const_bastardswordDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -1169,10 +878,11 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_greataxeName);	cweapon.setDesc(const_greataxeDesc);
 							cweapon.setValue(iValue);	cweapon.setCritical(const_greataxeCritical);	cweapon.setCritMod(const_greataxeCritMod);
 							cweapon.setDamage(const_greataxeDamage);	cweapon.setDice(const_greataxeDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -1192,10 +902,11 @@ void purchase()
 						{
 							// Get, deduct and set gold
 							gShort = player.getGold();	gShort -= iValue;	player.setGold(gShort);
+							cweapon.setName(const_greatswordName);	cweapon.setDesc(const_greatswordDesc);
 							cweapon.setValue(iValue);	cweapon.setCritical(const_greatswordCritical);	cweapon.setCritMod(const_greatswordCritMod);
 							cweapon.setDamage(const_greatswordDamage);	cweapon.setDice(const_greatswordDice);
-							player.addWeapon(cweapon);
-							player.equipWeapon();
+							player.addWeapon(cweapon, player.getWeaponCount());
+							player.equipWeapon(player.getWeaponCount());
 
 							bWeaponDone = true;	break;
 						}
@@ -1234,40 +945,62 @@ void fight()
 
 	bool bFightOver = false;
 	bool bMenu = false;
+	bool bPickWeapon = false;
+
 	int tmp;
+	string sTmp;
 	sint xpCalc;
 	sint goldCalc;
-	sint iArmorClass;
 
-	sint iInitiative, eInitiative;
-	sint iAttackRoll, eAttackRoll;
-	sint iDamageRoll, eDamageRoll;
-	sint eAttack;
+	sint pAttackRoll, eAttackRoll;
+	sint pDamageRoll, eDamageRoll;
 
 	sint roundCount = 1;
 
-	sint eHP, eAC, eGold, eXP;
+	sint eHP, eAC, eGold, eXP, eAttack;
 	string eName, eWeaponName;
+	string pName, pWeaponName;
+
+	sint pAttack, pHP, pAC;
 
 
 	// Setup static stuff
-	player.getWeapon(cweapon);
-	iArmorClass = player.getArmorClass();
+	pAC = player.getArmorClass();
+	pHP = player.getMaxHealth();
+	pAttack = 0; // for debug purposes
 
-	xpCalc = fightXPDowngrade(tmp, player.getLevel());
-	goldCalc = fightGoldDowngrade(tmp, player.getLevel());
-
-	fightEnemyRNG(enemy, xpCalc, goldCalc);
-
-	eHP = enemy.getHealth();
-	eAttack = enemy.getAttack();
-	eAC = enemy.getArmorClass();
-	eGold = enemy.getGold();
-	eXP = enemy.getExperience();
-	eName = enemy.getName();
-	eWeaponName = enemy.getWeaponName();
+	pName = player.getName();
 
 
+
+
+	// Pick out a weapon
+	while(!bPickWeapon)
+	{
+		px.clrscr();
+		player.showWeaponInventory();
+		px.getS(sTmp,"Please pick a weapon to use: ");
+		ss.stringToNumber(sTmp, tmp);	// to prevent bugs 
+
+		if( player.getWeaponCount() >= tmp)
+		{
+			player.getWeapon(cweapon, tmp-1); 	// tmp is index i.e. doesnt line up with array
+			player.equipWeapon(tmp-1);					// ^^^^
+			px.text("Do you want to use this weapon, the ", false); px.text(cweapon.getName(), false);
+			px.text("?  > ", false);
+			px.getS(sTmp);
+			if( sTmp == "y" || sTmp == "Y" )
+				bPickWeapon = true;
+		}
+		else
+		{
+			px.pause("Invalid choice, try again.");
+		}
+	}
+
+	pWeaponName = player.getWeaponName();
+	
+	
 	if (player.mCreated == false) // no player
 	{
 		px.pause("No character found.");
@@ -1291,6 +1024,24 @@ void fight()
 		ss.stringToNumber(gString, tmp);
 		bFightOver = false; // make sure you can fight
 
+		
+		// downgrades if fighting below level
+		xpCalc = fightXPDowngrade( gInt, player.getLevel());
+		goldCalc = fightGoldDowngrade( gInt, player.getLevel());
+
+		// Pick a random enemy
+		fightEnemyRNG(enemy, xpCalc, goldCalc);
+
+		
+		eHP = enemy.getHealth();
+		eAC = enemy.getArmorClass();
+		eGold = enemy.getGold();
+		eXP = enemy.getExperience();	
+		eAttack = enemy.getAttack();
+
+		eName = enemy.getName();
+		eWeaponName = enemy.getWeaponName();
+
 		// check for a quit selection
 		if (tmp == gInt){
 			px.getS(gString, "Are you sure you want to leave the arena? Y or N ");
@@ -1298,263 +1049,152 @@ void fight()
 		}
 		if( tmp < gInt )
 		{
-			bMenu = false;
+			bMenu = true;	// go onto fight, enemy level picked
 			break;
 		}
 	}
 	while (!bFightOver)
 	{
+		px.rng(pAttackRoll);
+		px.rng(eAttackRoll);
+
+		rollDamage(pDamageRoll, cweapon);
+		px.rng(eDamageRoll, eAttack-1, eAttack);
+
+		px.clrscr();
+
 			
-			px.rng(iInitiative);
-			px.rng(eInitiative);
+		// Round # (Player vs. enemy)
+		// hp remaining: #
+		// > Player swings his Weapon at enemy and misses
+		// > Enemy swings his eWeapon at player for # damage
+		px.text("Round ", false);
+		px.number(roundCount, false);
+		px.text(" (", false);
+		px.text(pName, false);
+		px.text(" vs. ", false);
+		px.text(eName, false);
+		px.text(")");
 
-			px.rng(iAttackRoll);
-			px.rng(eAttackRoll);
+		px.number(pHP, false);
+		px.text("hp remaining");
 
-			rollDamage(iDamageRoll, cweapon, 0);
-			px.rng(eDamageRoll, eAttack, eAttack-1);
+		px.sleep(5000);
+			
 
-			px.clrscr();
-			px.text("Round ", false);
-			px.number(roundCount, false);
-			px.text(" (", false);
-			px.text(player.getName(), false);
-			px.text(" vs. ", false);
-			px.text(eName, false);
-			px.text(")");
-
-			px.number(player.getHealth(), false);
-			px.text("hp remaining");
-
-			px.sleep(5000);
-			// Initiative hit
-			// player first
-		if (iInitiative >= eInitiative)
+		// hit
+		if (pAttackRoll >= eAC)
 		{
-				// hit
-			if (iAttackRoll >= eAC)
-			{
-					px.text("> ", false);
-					px.text(player.getName(), false);
-					px.text(" swings his ", false);
-					px.text(player.getWeaponName(), false);
-					px.text(" at his opponent ", false);
-					px.text(eName, false); 
+			px.text("> ", false);
+			px.text(pName, false);
+			px.text(" swings his ", false);
+			px.text(pWeaponName, false);
+			px.text(" at his opponent ", false);
+			px.text(eName, false); 
 					
-					if (iAttackRoll >= cweapon.getCritical()) // crit hit
-					{
-						for( int i = 0; i < cweapon.getCritMod(); i++)
-							rollDamage(iDamageRoll, cweapon, 0, false);
+			if (pAttackRoll >= cweapon.getCritical()) // crit hit
+			{
+				for( int i = 0; i < cweapon.getCritMod(); i++)
+					rollDamage(pDamageRoll, cweapon, 0, false);
 
-						px.text(" and critically hits for ", false);
-						px.number(iDamageRoll, false);
-						px.text(" damage!");
-					}
-					else
-					{
-						px.text(" and hits for ", false);
-						px.number(iDamageRoll, false);
-						px.text(" damage.");
-					}
-					eHP -= iDamageRoll;
+				px.text(" and critically hits for ", false);
+				px.number(pDamageRoll, false);
+				px.text(" damage!");
 			}
-				// miss
 			else
 			{
-					px.text("> ", false);
-					px.text(player.getName(), false);
-					px.text(" swings his ", false);
-					px.text(player.getWeaponName(), false);
-					px.text(" at his opponent ", false);
-					px.text(eName, false);
-					px.text(" and misses.");
+				px.text(" and hits for ", false);
+				px.number(pDamageRoll, false);
+				px.text(" damage.");
 			}
-				px.sleep(1250);
-		}
-
-			// enemy first
-		else
-		{
-				// enemy hit
-				if (eAttackRoll >= iArmorClass)
-				{
-					px.text("> ", false);
-					px.text(eName, false);
-					px.text(" swings his ", false);
-					px.text(eWeaponName, false);
-					px.text(" at ", false);
-					px.text(player.getName(), false);
-					px.text(" and hits for ", false);
-					px.number(eDamageRoll, false);
-					px.text(" damage.");
-
-					gShort = player.getHealth();
-					gShort -= eDamageRoll;
-					player.setHealth(gShort);
-				}
-				// enemy miss
-				else
-				{
-					px.text("> ", false);
-					px.text(eName, false);
-					px.text(" swings his ", false);
-					px.text(eWeaponName, false);
-					px.text(" at ", false);
-					px.text(player.getName(), false);
-					px.text(" and misses.");
-				}
-				px.sleep(1250);
-		}
-
-			// Rest of the battle after the first round until someone dies.
-
-		while (eHP > 0)
-		{
-			if (player.getHealth() <= 0)
-			{
-				player.mCreated = false;
-				player.setExperience(0);
-				player.setGold(0);
-				break;
+			eHP -= pDamageRoll;
 			}
-				px.clrscr();
-				roundCount++;
-
-				px.rng(iAttackRoll);
-				px.rng(eAttackRoll);
-
-
-				px.rng(eDamageRoll, eAttack, eAttack+1);
-
-				// Round # (Player vs. enemy)
-				// hp remaining: #
-				// > Player swings his Weapon at enemy and misses
-				// > Enemy swings his eWeapon at player for # damage
-
-				px.text("Round ", false);
-				px.number(roundCount, false);
-				px.text(" (", false);
-				px.text(player.getName(), false);
-				px.text(" vs. ", false);
-				px.text(eName, false);
-				px.text(")");
-
-				px.number(player.getHealth(), false);
-				px.text("hp remaining");
-
-				// player hit
-				if (iAttackRoll >= eAC)
-				{
-					px.text("> ", false);
-					px.text(player.getName(), false);
-					px.text(" swings his ", false);
-					px.text(player.getWeaponName(), false);
-					px.text(" at his opponent ", false);
-					px.text(eName, false);
-					if (iAttackRoll >= cweapon.getCritical()) // crit hit
-					{
-						iDamageRoll = 0;
-						for (int i = 0; i < cweapon.getCritMod(); i++)
-							rollDamage(iDamageRoll, cweapon, 0, false);
-
-						px.text(" and critically hits for ", false);
-						px.number(iDamageRoll, false);
-						px.text(" damage!");
-					}
-					else
-					{
-						px.text(" and hits for ", false);
-						px.number(iDamageRoll, false);
-						px.text(" damage.");
-					}
-					eHP -= iDamageRoll;
-				}
-				// player miss
-				else
-				{
-					px.text("> ", false);
-					px.text(player.getName(), false);
-					px.text(" swings his ", false);
-					px.text(player.getWeaponName(), false);
-					px.text(" at his opponent ", false);
-					px.text(eName, false);
-					px.text(" and misses.");
-				}
-				
-				px.sleep(1250);
 			
-				if (eHP > 0) // enemy not dead after player attack, give his turn
-				{
-					// enemy hit
-					if (eAttackRoll >= iArmorClass)
-					{
-					px.text("> ", false);
-					px.text(eName, false);
-					px.text(" swings his ", false);
-					px.text(eWeaponName, false);
-					px.text(" at ", false);
-					px.text(player.getName(), false);
-					px.text(" and hits for ", false);
-					px.number(eDamageRoll, false);
-					px.text(" damage.");
-
-					gShort = player.getHealth();
-					gShort -= eDamageRoll;
-					player.setHealth(gShort);
-					}
-					// enemy miss
-					else
-					{
-					px.text("> ", false);
-					px.text(eName, false);
-					px.text(" swings his ", false);
-					px.text(eWeaponName, false);
-					px.text(" at ", false);
-					px.text(player.getName(), false);
-					px.text(" and misses.");
-					}
-
-					px.sleep(1250);
-		
-
-					if (eHP <= 0) // enemy died
-					{
-				gShort = player.getGold();
-				gShort += eGold;
-				player.setGold(gShort);
-
-				gShort = player.getExperience();
-				gShort += eXP;
-				player.setExperience(gShort);
-
-				px.text(eName, false);
-				px.text(" has died. You have gained ", false);
-				px.number(eGold, false);
-				px.text(" gold and ", false);
-				px.number(eXP, false);
-				px.text(" experience.");
-				px.pause();
-				bFightOver = true;
-				bMenu = true;
-					}		
-					else if ( player.getHealth() <= 0 )// player died
-					{	
-					px.pause("You have died. Please bring back more bodies!");
-					bFightOver = true;
-					}
-
-				
-
-			}
-			if (player.getHealth() > 0 && eHP <= 0) // Player is victorious!
-				{
-					// reset player health
-					player.setHealth(player.getMaxHealth());
-					player.level();
-				}
+		else	// miss
+		{
+			px.text("> ", false);
+			px.text(pName, false);
+			px.text(" swings his ", false);
+			px.text(pWeaponName, false);
+			px.text(" at his opponent ", false);
+			px.text(eName, false);
+			px.text(" and misses.");
 		}
-	}
-}
+			
+		px.sleep(1250);
+		
+		if (eAttackRoll > pAC)		// enemy hit
+		{
+			px.text("> ", false);
+			px.text(eName, false);
+			px.text(" swings his ", false);
+			px.text(eWeaponName, false);
+			px.text(" at ", false);
+			px.text(pName, false);
+			px.text(" and hits for ", false);
+			px.number(eDamageRoll, false);
+			px.text(" damage.");
+
+			pHP -=eDamageRoll;
+			player.setHealth(pHP);
+		}
+			
+		else		// enemy miss
+		{
+			px.text("> ", false);
+			px.text(eName, false);
+			px.text(" swings his ", false);
+			px.text(eWeaponName, false);
+			px.text(" at ", false);
+			px.text(pName, false);
+			px.text(" and misses.");
+		}
+			
+		px.pause("End of round.");
+		roundCount++;
+
+
+		// do enemy and player health checks, reward or kill player accordingly
+			
+		if (pHP <= 0) // player died, reset XP but keep gold only
+		{
+			player.mCreated = false;
+			player.setExperience(0);
+			player.delWeapon(2);	player.delWeapon(1);	player.delWeapon(0);
+			player.delArmor(2);		player.delArmor(1);		player.delArmor(0);
+			// remove potions once they are added.
+			px.pause("You have died. Please bring back more bodies!");
+			bFightOver = true;
+		}
+		
+		if (eHP <= 0) // enemy died
+		{
+			gShort = player.getGold();
+			gShort += eGold;
+			player.setGold(gShort);
+
+			gShort = player.getExperience();
+			gShort += eXP;
+			player.setExperience(gShort);
+
+			px.text(eName, false);
+			px.text(" has died. You have gained ", false);
+			px.number(eGold, false);
+			px.text(" gold and ", false);
+			px.number(eXP, false);
+			px.text(" experience.");
+			px.pause();
+			px.sleep(5000);
+
+			
+			player.setHealth(player.getMaxHealth());
+			player.level();
+			bFightOver = true;
+
+		}		
+
+	}		// bFightOver
+}	// fight()
 
 // show inventory and equipped weapons
 void equip()
@@ -1643,19 +1283,19 @@ void fightEnemyRNG(cMonster &in, sint xp, sint gold)
 	switch (gInt)
 	{
 	case 1:
-		in.createEnemy("Orc", "Longsword", 20, 12, gold, 3, xp);
+		in.createEnemy("Orc", "Longsword", 20, 12, gold, 3, xp, 1);
 		break;
 	case 2:
-		in.createEnemy("Orc", "Falchion", 35, 13, gold, 5, xp);
+		in.createEnemy("Orc", "Falchion", 35, 13, gold, 5, xp, 1);
 		break;
 	case 3:
-		in.createEnemy("Orc", "Scimitar", 60, 14, gold, 7, xp);
+		in.createEnemy("Orc", "Scimitar", 60, 14, gold, 7, xp, 1);
 		break;
 	case 4:
-		in.createEnemy("Orc", "Broadsword", 85, 15, gold, 9, xp);
+		in.createEnemy("Orc", "Broadsword", 85, 15, gold, 9, xp, 1);
 		break;
 	case 5:
-		in.createEnemy("Orc", "Waraxe", 100, 16, gold, 11, xp);
+		in.createEnemy("Orc", "Waraxe", 100, 16, gold, 11, xp, 1);
 		break;
 	}
 }
@@ -1704,7 +1344,7 @@ void showWeapon(string sName, int iDice, int iDamage, int iCrit, int iCritMod, i
 
 // Armor display when buying
 // Armor name, AC, Dex Max, Value, running count for display purposes
-void showArmor(string sName, int iAC, int iDex, int iValue, int &iCount)
+void showArmor(string sName, int iAC, int iValue, int &iCount)
 {
 	px.number(iCount, false);
 	px.text(". ",false);
@@ -1712,8 +1352,6 @@ void showArmor(string sName, int iAC, int iDex, int iValue, int &iCount)
 	px.text(" ",false);	// Add a space
 	px.text("AC ",false);
 	px.number(iAC, false);
-	px.text(" Dex Max ", false);
-	px.number(iDex, false);
 	px.text(" Value ", false);
 	px.number(iValue, false);
 	px.text("gp");
@@ -1747,8 +1385,7 @@ cWeapon addWeapon(string sName, string sDesc, int iDice, int iDamage, int iCrit,
 }
 
 // use to add armor in batches
-/*
-	sint mDexMod;
+/*]
 	sint mArmorClass;
 	bool isEquipped; // Am i wearing this?
 
@@ -1758,10 +1395,10 @@ cWeapon addWeapon(string sName, string sDesc, int iDice, int iDamage, int iCrit,
 
 	sint mValue; // How much gold is this worth
 */
-cArmor addArmor(string sName, string sDesc, int iAC, int iDex, int iValue)
+cArmor addArmor(string sName, string sDesc, int iAC, int iValue)
 {
 	cArmor tmp;		tmp.clear();
-	tmp.setName(sName);	tmp.setDesc(sDesc);	tmp.setAC(iAC);	tmp.setMaxDex(iDex);	tmp.setValue(iValue);
+	tmp.setName(sName);	tmp.setDesc(sDesc);	tmp.setAC(iAC);	tmp.setValue(iValue);
 	tmp.setType();	// armor default
 	tmp.setEquipped(false);
 	return tmp;

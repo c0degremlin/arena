@@ -32,7 +32,7 @@ const string const_bastardswordName = "Bastard Sword";
 const string const_greataxeName = "Great Axe";
 const string const_greatswordName = "Great Sword";
 
-const string const_unarmedDesc = "";
+const string const_unarmedDesc = "Bashing with the use of bare knuckles!";
 const string const_daggerDesc = "A sharp curved blade that fits perfect in a belt";
 const string const_maceDesc = "A club with a metal ball at the end";
 const string const_handaxeDesc = "A handheld axe, very fast";

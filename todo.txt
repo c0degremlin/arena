@@ -1,42 +1,45 @@
 // Most important to least top to bottom
 
+=====================================================================
+Level 10 to 7
+=====================================================================
 finish armor and weapon inventory ( add functionality to it, base is half assed )
 
-add weapon desc as const strings
-^^ Add these when purchasing
 
-completely rewrite fight from scratch
+update purchase function to only allow 3 weapons and armors and ten potions
+addWeapon and addArmor in purchase function uses player.mNumberOfArmors and player.mNumberOfWeapons
+^^ these return the number of items after post-crement
 
-update weapon and armor functions based on arrays
-have index to not show empty portions of array
-add potion types and setup potion arrays
+fix/look into rollDamage player function
+rollDamage will only do 1 damage, at least with the dagger. look into this
 
-update purchase function to add weapon without hard coded number one
 
-fight function is buggy as fukkkk, 
-orc always hits?
-add options to heal?
-dont lose xp or gold or equipped weapons/armor when dying.
-redo RNG calculations?? 
-Get weapon from inventory/opt to equip from inventory first ? Done ?
-Check player HP and kill him if needed ? Done ?
-
+=====================================================================
+Level 6 to 4
+=====================================================================
 finish main.cpp equip function
 
-find a better use of player.equip weapon. try to remove the numbers and add a index so we dont get invalid choices and crashes
-finish equipWeapon // not checking stuff, add more functions/break down more
+find player.armorclass bug cuz its defaulting to zero instead of const_baseAC which equals 10
 
-buy weapon but name and desc not added to inventory
+find a better use of player.equip weapon. try to remove the numbers and add a index so we dont get invalid choices and crashes
+
+finish equipWeapon // not checking stuff, add more functions/break down more
 
 split main into managable functions to help with upkeep and such.
 
+add potion types and setup potion arrays
+delete potion upon death in fight()
+add options to heal with potion during fight?
+
+=====================================================================
+Level 3 and under
+=====================================================================
 
 look at player and monster class. try to seprate the file and polish it up
 
 polish up showArmor function
+add weapon portion to equip from main menu
 ?? make actual weapon and armor objects memory is dirt cheap so ??
 
 add more variations to enemys, stats, weapons and armor.
-Armor ^^ Cloth, cloaks, ring ( 1 max )
-Weapons ^^ Staffs
-add items such as potions, scrolls, wands
+

@@ -1,13 +1,9 @@
 #include "armor.hpp"
 
 
-cArmor::cArmor(sint dex, sint ac, sint value, string name, string desc, string type)
+cArmor::cArmor(sint ac, sint value, string name, string desc, string type)
 {
-	if (dex >= 0)
-		mDexMod = dex;
-	else
-		mDexMod = SHRT_MAX;
-
+	
 	if (ac >= 0)
 		mArmorClass = ac;
 	else
@@ -31,7 +27,6 @@ cArmor::cArmor(sint dex, sint ac, sint value, string name, string desc, string t
 
 void cArmor::clear()
 {
-	mDexMod = 0;
 	mArmorClass = 0;
 	mValue = 0;
 	isEquipped = false;

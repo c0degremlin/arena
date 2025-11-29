@@ -49,55 +49,42 @@ const string const_halfplateDesc = "Half Plate Suit, thick solid pieces of metal
 const string const_fullplateDesc = "Full Plate Suit, thick solid pieces of metal to protect the whole body.";
 
 const sint const_unarmoredAC = 0;	// +0
-const sint const_unarmoredDex = 100;	// cant have dex bonus more than that!
 const sint const_unarmoredValue = 0;	// comes equipped
 
 const sint const_paddedAC = 1;		// +1
-const sint const_paddedDex = 8;		// max +8 to dex checks
 const sint const_paddedValue = 50;	// gp
 
 const sint const_leatherAC = 2;		// +2
-const sint const_leatherDex = 6;	// max +6 to dex checks
 const sint const_leatherValue = 100;	// gp
 
 const sint const_hideAC = 3;		// +3
-const sint const_hideDex = 4;		// max +4 to dex checks
 const sint const_hideValue = 150;	// gp
 
 const sint const_studdedAC = 3;		// +3
-const sint const_studdedDex = 5;	// max +5 to dex checks
 const sint const_studdedValue = 250;	// gp
 
 const sint const_scaleAC = 4;		// +4
-const sint const_scaleDex = 3;		// max +3 to dex checks
 const sint const_scaleValue = 500;	// gp
 
 const sint const_chainshirtAC = 4;	// +4
-const sint const_chainshirtDex = 4;	// max +4 to dex checks
 const sint const_chainshirtValue = 1000;// gp
 
 const sint const_chainmailAC = 5;	// +5
-const sint const_chainmailDex = 2;	// max +2 to dex checks
 const sint const_chainmailValue = 1500;	// gp
 
 const sint const_breastplateAC = 5;	// +5
-const sint const_breastplateDex = 3;	// max +3 to dex checks
 const sint const_breastplateValue = 2000;// gp
 
 const sint const_splintAC = 6;		// +6
-const sint const_splintDex = 0;		// no dex bonus
 const sint const_splintValue = 2250;	// gp
 
 const sint const_bandedAC = 6;		// +6
-const sint const_bandedDex = 1;		// max +1 to dex checks
 const sint const_bandedValue = 2500;	// gp
 
 const sint const_halfplateAC = 7;	// +7
-const sint const_halfplateDex = 0;	// no dex bonus
 const sint const_halfplateValue = 4500;	// gp
 
 const sint const_fullplateAC = 8;	// +8
-const sint const_fullplateDex = 1;	// max +1 to dex checks
 const sint const_fullplateValue = 8000;	// gp
 
 
@@ -111,17 +98,16 @@ END ARMOR
 class cArmor : public cItem
 {
 private:
-	sint mDexMod;
 	sint mArmorClass;
 	bool isEquipped; // Am i wearing this?
 
 public:
-	cArmor(sint dex = 0, sint ac = 0, sint value = 0, string name = "", string desc = "", string type = "armor") ;
+	cArmor(sint ac = 0, sint value = 0, string name = "", string desc = "", string type = "armor") ;
 
 	virtual void clear(); // Reset all values
 						  // cArmor Accesors
-	sint getMaxDex() { return mDexMod; } sint getAC() { return mArmorClass; } bool getEquipped() { return isEquipped; }
-	void setMaxDex( sint tmp ) { mDexMod = tmp; } void setAC( sint tmp ) { mArmorClass = tmp; } 
+	sint getAC() { return mArmorClass; } bool getEquipped() { return isEquipped; }
+	void setAC( sint tmp ) { mArmorClass = tmp; } 
 
 	// cItem accessors
 	string getName() { return mItemName; }	string getDesc() { return mItemDesc; }	string getType() { return mItemType; } // Armor
